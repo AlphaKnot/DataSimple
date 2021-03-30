@@ -1,4 +1,6 @@
-package credentialsDatabase;
+/***
+ * this class implements the login interface of the main program
+ */
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -68,19 +70,28 @@ public class LoginInterface extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent ae) {
+        CredentialsDatabase database = null;
+        try {
+            // getting the credentials database
+            database = new CredentialsDatabase();
+        } catch (Exception e) {
+            e.printStackTrace();
+            message.setText("credentials database failed to sync");
+        }
+        // getting the inputs from the user
         String userName = userName_text.getText();
         String password = password_text.getText();
-           /* if (userName.trim().equals("admin") && password.trim().equals("admin")) {
-                message.setText(" Hello " + userName
-                        + "");
-            } else {
-                message.setText(" Login Error");
-            }
-*/
+
+        // comparing the user input to the credentials database
+        if (database.getValue(userName.trim()).equals(password.trim())){
+            message.setText("Hello " + userName + "");
+        }
+        // if there is an error, will
+        else{
+            message.setText(" Login Error");
+        }
 
     }
-
 }
 
-// if the userName.trim() is in the database and the password.trim() matches, login
 
