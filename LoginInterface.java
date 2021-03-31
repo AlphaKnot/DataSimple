@@ -9,12 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 
 public class LoginInterface extends JFrame implements ActionListener{
@@ -55,8 +50,10 @@ public class LoginInterface extends JFrame implements ActionListener{
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+
         // Adding the listeners to components..
         submit.addActionListener(this);
+        password_text.addActionListener(this);
         add(panel, BorderLayout.CENTER);
         setTitle("Please Login Here !");
         setSize(300, 100);
@@ -65,6 +62,7 @@ public class LoginInterface extends JFrame implements ActionListener{
     }
 
     public static void main(String[] args) throws Exception {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         new LoginInterface();
     }
 
@@ -84,7 +82,9 @@ public class LoginInterface extends JFrame implements ActionListener{
 
         // comparing the user input to the credentials database
         if (database.getValue(userName.trim()).equals(password.trim())){
-            message.setText("Hello " + userName + "");
+           ProgramUI mainUI =  new ProgramUI();
+           mainUI.setVisible(true);
+           this.setVisible(false);
         }
         // if there is an error, will
         else{
