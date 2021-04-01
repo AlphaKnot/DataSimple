@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import org.jfree.chart.*;
+import org.jfree.data.category.DefaultCategoryDataset;
+
 
 public class ProgramUI extends JFrame{
 
@@ -65,6 +68,7 @@ public class ProgramUI extends JFrame{
             // This call to method will refresh years, possibly use jenessa's code? ~ marz
             System.out.println("Country dropdown clicked!");
 
+
         }
     }
 
@@ -118,5 +122,9 @@ public class ProgramUI extends JFrame{
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         ProgramUI GUI = new ProgramUI();
         GUI.setVisible(true);
+
+
+
     }
+
 }

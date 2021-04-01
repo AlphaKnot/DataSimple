@@ -22,9 +22,7 @@
         </constraints>
         <properties>
           <model>
-            <item value="Random Country 1"/>
-            <item value="Random country 2"/>
-            <item value="Etc"/>
+            <item value="Click here to refresh list"/>
           </model>
         </properties>
       </component>
