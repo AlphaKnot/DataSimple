@@ -36,6 +36,11 @@ public class Country {
     public Country(String countryName, String countryCode, String indicator, int startYear, int endYear){
 
     }
-// How would we retrieve the parsed info? Data parser call!
+
+    @Override
+    public String toString() {
+       return countryName;
+    }
+    // How would we retrieve the parsed info? Data parser call!
 
 }

@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileNotFoundException;
+import java.util.Objects;
+
 import org.jfree.chart.*;
 import org.jfree.data.category.DefaultCategoryDataset;
 
@@ -17,7 +20,7 @@ public class ProgramUI extends JFrame{
      */
     private JComboBox countryDropdown;
     private JComboBox yearStartDropdown;
-    private JComboBox yearEnddropDown;
+    private JComboBox yearEndDropDown;
     private JPanel rootPanel;
     private JButton remove_view;
     private JButton add_view;
@@ -33,6 +36,7 @@ public class ProgramUI extends JFrame{
     private JButton recalculate_button;
     private JPanel viewer4;
     private JLabel viewerLabel4;
+    private CountryDatabase countDB = null;
 
     /***
      * Constructor does the following :
@@ -52,7 +56,7 @@ public class ProgramUI extends JFrame{
         add(rootPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        countryDropdown.addActionListener(new countryDropdownClicked());
+        countryDropdown.addActionListener(new countryDropdownClicked(this, countryDropdown, yearStartDropdown, yearEndDropDown,countDB));
         recalculate_button.addActionListener(new recalculateButtonClicked());
         add_view.addActionListener(new addViewOnClick());
         remove_view.addActionListener(new removeViewOnClick());
@@ -62,14 +66,64 @@ public class ProgramUI extends JFrame{
 
 // We will need multiple actionListeners for each task, I'll try renaming each class to be indicative of what needs to be done ~ marz
     static class countryDropdownClicked implements ActionListener{
-
+        JComboBox countryDropdown;
+        JComboBox yearStartDropdown;
+        JComboBox yearEndDropdown;
+        CountryDatabase cd;
+        ProgramUI main;
+        public countryDropdownClicked(ProgramUI main, JComboBox countryDropdown, JComboBox yearStartDropdown, JComboBox yearEndDropdown, CountryDatabase cd){
+            this.countryDropdown = countryDropdown;
+            this.yearStartDropdown = yearStartDropdown;
+            this.yearEndDropdown = yearEndDropdown;
+            this.cd = cd;
+            this.main = main;
+        }
         @Override
         public void actionPerformed(ActionEvent e) {
+            // Executes only the first time the action is performed
+            if (this.countryDropdown.getItemCount() == 1) {
+                // This call to method will refresh years, possibly use jenessa's code? ~ marz
+                System.out.println("Refreshing country lists");
 
-            // This call to method will refresh years, possibly use jenessa's code? ~ marz
-            System.out.println("Country dropdown clicked!");
+                if(cd ==null){
+                    try {
+                        cd = new CountryDatabase("country_list");
+                    } catch (FileNotFoundException fileNotFoundException) {
+                        fileNotFoundException.printStackTrace();
+                    }
+                    // iterates through all countries and adds them to drop down menu, refreshes dates and
+                    for (int i = 0; i < Objects.requireNonNull(cd).Countrydatabase.size(); i++) {
+                        // Add first element (Country) to first drop down
+                        this.main.countDB = cd;
+                        countryDropdown.addItem(cd.getCountrydatabase().get(i).countryName);
 
+                    }
+                    countryDropdown.removeItem(countryDropdown.getSelectedItem());
+                }
+            }
 
+            // In this case a country has been selected , populate both year start and year end with val
+            else{
+                // Remove all previous years
+                yearEndDropdown.removeAllItems();
+                yearStartDropdown.removeAllItems();
+                // Does this item have country properties
+                // Use this to get country Object
+                Country selected = cd.getCountrydatabase().get(countryDropdown.getSelectedIndex());
+                /**
+                System.out.println("Start year of selected country: "+ selected.years.getStart());
+                System.out.println("End year of selected country: "+selected.years.getEnd());
+                For diagnostics
+                 **/
+                for(int i = selected.years.getStart() ; i<selected.years.getEnd(); i++){
+                    yearEndDropdown.addItem((Integer) i);
+                    yearStartDropdown.addItem((Integer) i);
+                }
+                /***
+                 * Small thing here where you get the last year and update the EndYear button to have the last year
+                 */
+                yearEndDropdown.setSelectedIndex(selected.years.getEnd()-selected.years.getStart()-1);
+            }
         }
     }
 

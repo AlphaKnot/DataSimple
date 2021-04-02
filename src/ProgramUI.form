@@ -18,7 +18,7 @@
       </component>
       <component id="93865" class="javax.swing.JComboBox" binding="countryDropdown">
         <constraints>
-          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <model>
@@ -46,9 +46,7 @@
           <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <model>
-            <item value="1971"/>
-          </model>
+          <model/>
         </properties>
       </component>
       <component id="dce81" class="javax.swing.JLabel">
@@ -59,14 +57,12 @@
           <text value="To:"/>
         </properties>
       </component>
-      <component id="219cc" class="javax.swing.JComboBox" binding="yearEnddropDown">
+      <component id="219cc" class="javax.swing.JComboBox" binding="yearEndDropDown">
         <constraints>
           <grid row="0" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <model>
-            <item value="2018"/>
-          </model>
+          <model/>
         </properties>
       </component>
       <hspacer id="bd4d7">
