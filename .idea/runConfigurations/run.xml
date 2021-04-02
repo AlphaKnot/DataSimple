@@ -1,9 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="java" type="Java Scratch" nameIsGenerated="true">
+  <configuration default="false" name="run" type="Application" factoryName="Application">
     <option name="ALTERNATIVE_JRE_PATH" value="11" />
-    <option name="MAIN_CLASS_NAME" value="ProgramUI.java" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <module name="DatSimp" />
-    <option name="SCRATCH_FILE_URL" value="file://$PROJECT_DIR$/ProgramUI.java" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

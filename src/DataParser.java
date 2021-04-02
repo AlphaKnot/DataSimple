@@ -37,11 +37,11 @@ public class DataParser {
     float cum_value = 0;
     float cum_avg = 0;
     String indicator;
-    int yearStart;
-    int yearEnd;
+    String yearStart;
+    String yearEnd;
     String country_code;
 
-    public DataParser(String indicator, String country_code, int yearStart, int yearEnd) {
+    public DataParser(String indicator, String country_code, String yearStart, String yearEnd) {
         // Formats url with parameters of constructor
 
         // Setting attributes;
@@ -170,7 +170,7 @@ public class DataParser {
      * get YearEnd Value
      * @return Integer
      */
-    public int getYearEnd() {
+    public String getYearEnd() {
         return yearEnd;
     }
 
@@ -178,7 +178,7 @@ public class DataParser {
      * returns YearStart value
      * @return
      */
-    public int getYearStart() {
+    public String getYearStart() {
         return yearStart;
     }
 

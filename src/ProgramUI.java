@@ -31,6 +31,8 @@ public class ProgramUI extends JFrame{
     private JLabel viewer2_label;
     private JComboBox analysisDropDown;
     private JButton recalculate_button;
+    private JPanel viewer4;
+    private JLabel viewerLabel4;
 
     /***
      * Constructor does the following :
@@ -48,7 +50,6 @@ public class ProgramUI extends JFrame{
         setSize(900,700);
         setTitle("Country Statistics -- Alpha Knot inc");
         add(rootPanel);
-        Country_Synopsis.setText("Country Synopsis -- Nothing here yet");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         countryDropdown.addActionListener(new countryDropdownClicked());
