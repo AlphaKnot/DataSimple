@@ -34,14 +34,15 @@ public class DataParser {
      * the start and end years and stored in two integer values.
      */
     ArrayList<Float> values = new ArrayList<>();
+    ArrayList<ParsedSeries> series = new ArrayList<>();
     float cum_value = 0;
     float cum_avg = 0;
-    String indicator;
+    String[] indicator; // These will be used as series or a means to create another series
     String yearStart;
     String yearEnd;
     String country_code;
 
-    public DataParser(String indicator, String country_code, String yearStart, String yearEnd) {
+    public DataParser(String[] indicator, String country_code, String yearStart, String yearEnd) {
         // Formats url with parameters of constructor
 
         // Setting attributes;
@@ -49,99 +50,108 @@ public class DataParser {
         this.country_code = country_code;
         this.yearStart = yearStart;
         this.yearEnd = yearEnd;
-        String urlString = String.format("http://api.worldbank.org/v2/"+country_code+"/indicator/"+indicator+"?date="+ yearStart +":"+ yearEnd +"&format=json", "can");
+        for (int j = 0; j< indicator.length; j++) {
+            // Reinit if needed
+            ArrayList<Float> values = new ArrayList<>();
+            cum_avg = 0;
 
-        System.out.println(urlString);
-        System.out.println(urlString);
-        // Since the example code uses population , we generalize it for all types of indicators.
-        int valueForYear = 0;
+            String urlString = String.format("http://api.worldbank.org/v2/country/" + country_code + "/indicator/" + indicator[j] + "?date=" + yearStart + ":" + yearEnd + "&format=json", "can");
 
-        int cumulativeValue = 0;
+            System.out.println(urlString);
+            System.out.println(urlString);
+            // Since the example code uses population , we generalize it for all types of indicators.
+            int valueForYear = 0;
 
-        try {
+            int cumulativeValue = 0;
 
-            URL url = new URL(urlString);
+            try {
 
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                URL url = new URL(urlString);
 
-            conn.setRequestMethod("GET");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            conn.connect();
+                conn.setRequestMethod("GET");
 
-            int responsecode = conn.getResponseCode();
+                conn.connect();
 
-            // IF THE RESPONSE IS 200 OK GET THE LINE WITH THE RESULTS
+                int responsecode = conn.getResponseCode();
 
-            if (responsecode == 200) {
+                // IF THE RESPONSE IS 200 OK GET THE LINE WITH THE RESULTS
 
-                String inline = "";
+                if (responsecode == 200) {
 
-                Scanner sc = new Scanner(url.openStream());
+                    String inline = "";
 
-                while (sc.hasNext()) {
+                    Scanner sc = new Scanner(url.openStream());
 
-                    inline += sc.nextLine();
+                    while (sc.hasNext()) {
 
-                }
+                        inline += sc.nextLine();
 
-                sc.close();
+                    }
 
-                // PROCESS THE JSON AS ONE LINE
+                    sc.close();
 
-                JsonArray jsonArray = new JsonParser().parse(inline).getAsJsonArray();
+                    // PROCESS THE JSON AS ONE LINE
 
-                int size = jsonArray.size();
+                    JsonArray jsonArray = new JsonParser().parse(inline).getAsJsonArray();
 
-                int sizeOfResults = jsonArray.get(1).getAsJsonArray().size();
+                    int size = jsonArray.size();
 
-                int year = 0;
+                    int sizeOfResults = jsonArray.get(1).getAsJsonArray().size();
 
-                for (int i = 0; i < sizeOfResults; i++) {
+                    int year = 0;
+
+                    for (int i = 0; i < sizeOfResults; i++) {
 
                         // GET FOR EACH ENTRY THE YEAR FROM THE “date” FIELD
 
-                    year = jsonArray.get(1).getAsJsonArray().get(i).getAsJsonObject().get("date").getAsInt();
+                        year = jsonArray.get(1).getAsJsonArray().get(i).getAsJsonObject().get("date").getAsInt();
 
-                    // CHECK IF THERE IS A VALUE FOR THE POPULATION FOR A
+                        // CHECK IF THERE IS A VALUE FOR THE POPULATION FOR A
 
-                    //  GIVEN YEAR
+                        //  GIVEN YEAR
 
-                    if(jsonArray.get(1).getAsJsonArray().get(i).getAsJsonObject().get("value").isJsonNull())
+                        if (jsonArray.get(1).getAsJsonArray().get(i).getAsJsonObject().get("value").isJsonNull())
 
-                        valueForYear = 0;
+                            valueForYear = 0;
 
-                    else
+                        else
 
-                        // GET THE POPULATION FOR THE GIVEN YEAR FROM THE
+                            // GET THE POPULATION FOR THE GIVEN YEAR FROM THE
 
-                        // “value” FIELD
+                            // “value” FIELD
 
-                        valueForYear = jsonArray.get(1).getAsJsonArray().get(i).getAsJsonObject().get("value").getAsInt();
+                            valueForYear = jsonArray.get(1).getAsJsonArray().get(i).getAsJsonObject().get("value").getAsInt();
 
-                    System.out.println("Population for : " + year + " is " +  valueForYear); // Debugging print line;
-                    // Add value to arrayList
-                    values.add((float) valueForYear);
+                        System.out.println(indicator[j]+ " value for " + year + " is " + valueForYear); // Debugging print line;
+                        // Add value to arrayList
+                        values.add((float) valueForYear);
 
-                    cumulativeValue += valueForYear;
+                        cumulativeValue += valueForYear;
+
+                    }
+
+                    System.out.println("The average population over the selected years is " + cumulativeValue / sizeOfResults);
+                    cum_value = cumulativeValue;
+                    cum_avg = cum_value / sizeOfResults;
 
                 }
 
-                System.out.println("The average population over the selected years is " + cumulativeValue / sizeOfResults);
-                cum_value = cumulativeValue;
-                cum_avg = cum_value/sizeOfResults;
+            } catch (IOException e) {
+
+                e.printStackTrace();
 
             }
 
-        } catch (IOException e) {
-
-          e.printStackTrace();
-
+            System.out.println("Data successfully parsed in var values");
+            ParsedSeries p = new ParsedSeries(indicator[j],values,cum_avg);
+            // Adding series here
+            series.add(p);
         }
 
 
-
     }
-
     /***
      * Getter functions for the class attributes.
      * @return ArrayList<Float>
@@ -149,6 +159,8 @@ public class DataParser {
     public ArrayList<Float> getValues() {
         return values;
     }
+
+
 
     /***
      * get Cumulative average
@@ -186,8 +198,12 @@ public class DataParser {
      * gets indicator
      * @return String
      */
-    public String getIndicator() {
+    public String[] getIndicator() {
         return indicator;
+    }
+
+    public ArrayList<ParsedSeries> getSeries() {
+        return series;
     }
 }
 

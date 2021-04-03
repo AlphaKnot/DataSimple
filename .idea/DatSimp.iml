@@ -5,5 +5,8 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="jfreechart-1.5.3" level="project" />
+    <orderEntry type="library" name="jcommon-1.0.23" level="project" />
+    <orderEntry type="library" name="gson-2.8.2" level="project" />
   </component>
 </module>

@@ -24,18 +24,10 @@ public class ProgramUI extends JFrame{
     private JPanel rootPanel;
     private JButton remove_view;
     private JButton add_view;
-    private JComboBox view_type_dropdown;
-    private JTextPane Country_Synopsis;
-    private JPanel viewer3;
-    private JPanel viewer1;
-    private JPanel viewer2;
-    private JLabel viewer1_label;
-    private JLabel viewer3_label;
-    private JLabel viewer2_label;
     private JComboBox analysisDropDown;
     private JButton recalculate_button;
-    private JPanel viewer4;
-    private JLabel viewerLabel4;
+    private JComboBox viewDropdown;
+    private JPanel center;
     private CountryDatabase countDB = null;
 
     /***
@@ -50,14 +42,17 @@ public class ProgramUI extends JFrame{
      *  remove_view
      */
 
-    public ProgramUI(){
-        setSize(900,700);
+    public ProgramUI() throws FileNotFoundException {
+        setSize(1400,1000);
         setTitle("Country Statistics -- Alpha Knot inc");
         add(rootPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        // Set length for analysis dropdown
+        //analysisDropDown.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        countDB = new CountryDatabase("country_list");
+        //setting sizes for comboboxes
         countryDropdown.addActionListener(new countryDropdownClicked(this, countryDropdown, yearStartDropdown, yearEndDropDown,countDB));
-        recalculate_button.addActionListener(new recalculateButtonClicked());
+        recalculate_button.addActionListener(new recalculateButtonClicked(this,countryDropdown,yearStartDropdown,yearEndDropDown,analysisDropDown,countDB));
         add_view.addActionListener(new addViewOnClick());
         remove_view.addActionListener(new removeViewOnClick());
         // TODO : Add graphs , add hover listener event to them
@@ -85,12 +80,7 @@ public class ProgramUI extends JFrame{
                 // This call to method will refresh years, possibly use jenessa's code? ~ marz
                 System.out.println("Refreshing country lists");
 
-                if(cd ==null){
-                    try {
-                        cd = new CountryDatabase("country_list");
-                    } catch (FileNotFoundException fileNotFoundException) {
-                        fileNotFoundException.printStackTrace();
-                    }
+
                     // iterates through all countries and adds them to drop down menu, refreshes dates and
                     for (int i = 0; i < Objects.requireNonNull(cd).Countrydatabase.size(); i++) {
                         // Add first element (Country) to first drop down
@@ -99,8 +89,11 @@ public class ProgramUI extends JFrame{
 
                     }
                     countryDropdown.removeItem(countryDropdown.getSelectedItem());
-                }
+                    //Sets max length of dropdown
+                    countryDropdown.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+
             }
+
 
             // In this case a country has been selected , populate both year start and year end with val
             else{
@@ -111,15 +104,16 @@ public class ProgramUI extends JFrame{
                 // Use this to get country Object
                 Country selected = cd.getCountrydatabase().get(countryDropdown.getSelectedIndex());
                 /**
-                System.out.println("Start year of selected country: "+ selected.years.getStart());
-                System.out.println("End year of selected country: "+selected.years.getEnd());
+                 System.out.println("Start year of selected country: "+ selected.years.getStart());
+                 System.out.println("End year of selected country: "+selected.years.getEnd());
                 For diagnostics
                  **/
+
                 for(int i = selected.years.getStart() ; i<selected.years.getEnd(); i++){
                     yearEndDropdown.addItem((Integer) i);
                     yearStartDropdown.addItem((Integer) i);
                 }
-                /***
+                /*
                  * Small thing here where you get the last year and update the EndYear button to have the last year
                  */
                 yearEndDropdown.setSelectedIndex(selected.years.getEnd()-selected.years.getStart()-1);
@@ -129,11 +123,68 @@ public class ProgramUI extends JFrame{
 
 // Action listener for when recalculate is clicked
     static class recalculateButtonClicked implements ActionListener{
-
+        JComboBox countryDropdown;
+        JComboBox yearStartDropdown;
+        JComboBox yearEndDropdown;
+        JComboBox analysisDropdown;
+        CountryDatabase cd;
+        ProgramUI main;
+    public recalculateButtonClicked(ProgramUI main, JComboBox countryDropdown, JComboBox yearStartDropdown, JComboBox yearEndDropdown, JComboBox analysisDropdown,CountryDatabase cd) {
+        this.countryDropdown = countryDropdown;
+        this.yearStartDropdown = yearStartDropdown;
+        this.yearEndDropdown = yearEndDropdown;
+        this.analysisDropdown = analysisDropdown;
+        this.cd = cd;
+        this.main = main;
+        // Required , year end year start, Country name for query
+        // Country code for parsing
+        // Create -> JFreeChart Object.
+        // Uses constructor to take in these parameters.
+    }
         @Override
         public void actionPerformed(ActionEvent e) {
             // This call to method will call the necessary action to calculate the graph required, possibly use jenessa's code? ~ marz
             System.out.println("Recalculating!");
+            // This gives us the country selected.
+            Country country = cd.getCountrydatabase().get(countryDropdown.getSelectedIndex());
+            // We parse that to populate the "values" array within coutries.
+            System.out.println("Analyzing");
+            //TODO: Indicator from analysisdropdown needed for parsing, possible unhardcode
+
+            // FRICK I HATE HARD-CODING THIS SOLUTION UGH SOMONE END THIS SHIT ALREADY IM MAD
+            int position = analysisDropdown.getSelectedIndex();
+            String[] indicators = new String[0];
+            // There are 8 options here:
+            if(position == 0){
+                indicators = new String[]{"EN.ATM.CO2E.PC", "EG.USE.PCAP.KG.OE", "EN.ATM.PM25.MC.M3"};
+            }
+            else if(position ==1){
+                indicators = new String[]{"EN.ATM.PM25.MC.M3", "AG.LND.FRST.ZS"};
+            }
+            else if(position == 2){
+                indicators = new String[]{"EN.ATM.CO2E.PC", "NY.GDP.PCAP.CD"};
+            }
+            else if(position ==3){
+                indicators = new String[]{"AG.LND.FRST.ZS"};
+            }
+            else if(position == 4){
+                indicators = new String[]{"SE.XPD.TOTL.GD.ZS"};
+            }
+            else if(position ==5){
+                indicators = new String[]{"SH.MED.BEDS.ZS", "SE.XPD.TOTL.GD.ZS"};
+            }
+            else if(position == 6){
+                indicators = new String[]{"SH.XPD.CHEX.GD.ZS","NY.GDP.PCAP.CD", "SP.DYN.IMRT.IN"};
+            }
+            else if(position ==7){
+                indicators = new String[]{"SE.XPD.TOTL.GD.ZS", "SH.XPD.CHEX.GD.ZS"};
+            }
+
+
+            DataParser dp = new DataParser(indicators,  country.countryCode, Integer.toString(country.years.getStart()),  Integer.toString(country.years.getEnd()));
+
+            // NEXT : Hook to dataprocessor
+            DataProcessor dataProcessor = new DataProcessor(main.center, country);
 
         }
     }
@@ -172,8 +223,10 @@ public class ProgramUI extends JFrame{
             super.mouseExited(e);
         }
     }
+
+
 // Main method, calls the window
-    public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, FileNotFoundException {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         ProgramUI GUI = new ProgramUI();
         GUI.setVisible(true);

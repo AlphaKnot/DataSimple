@@ -1,6 +1,7 @@
 import org.jfree.chart.*;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class CreateChart extends ProgramUI{
@@ -12,7 +13,8 @@ public class CreateChart extends ProgramUI{
     // 3. Three graphs, three datasets -- ( one country )
 
 // Constructor takes in 3 datasets, and 3 names.
-    public CreateChart(String dataset_1 , ArrayList<Float> value_1, String dataset_2, ArrayList<Float> value_2, String dataset_3, ArrayList<Float> value_3){
-       DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    public CreateChart(String dataset_1 , ArrayList<Float> value_1, String dataset_2, ArrayList<Float> value_2, String dataset_3, ArrayList<Float> value_3) throws FileNotFoundException {
+        super();
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     }
 }

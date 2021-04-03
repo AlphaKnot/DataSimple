@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
 
 import javax.swing.*;
 
@@ -82,8 +83,13 @@ public class LoginInterface extends JFrame implements ActionListener{
 
         // comparing the user input to the credentials database
         if (database.getValue(userName.trim()).equals(password.trim())){
-           ProgramUI mainUI =  new ProgramUI();
-           mainUI.setVisible(true);
+            ProgramUI mainUI = null;
+            try {
+                mainUI = new ProgramUI();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            mainUI.setVisible(true);
            this.setVisible(false);
         }
         // if there is an error, will
