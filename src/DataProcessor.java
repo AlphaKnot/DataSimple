@@ -1,4 +1,7 @@
+import org.jfree.data.category.DefaultCategoryDataset;
+
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class DataProcessor {
     // Step one parse data.
@@ -6,11 +9,25 @@ public class DataProcessor {
     // Step three get that country object here
     // Step four get that result object back to program UI
     JPanel root;
-    ParsedSeries s;
-    String method; // This will be the method by which we process. is it a piechart, a barchart? etc.
+    ArrayList<ParsedSeries> series;
+    int method; // This will be the method by which we process. is it a piechart, a barchart? etc.
     Country country; // Country is at this point should be complete for what analysis it will be doing
-    public DataProcessor(JPanel root, Country country){
-
+    public DataProcessor(JPanel root, ArrayList<ParsedSeries> series, int method){
+        // Init from constructor
+        // I should really do 2208 its due really soon but NEIT
+        this.root = root;
+        this.series = series;
+        this.method = method;
+        /*
+        ArrayList<DefaultCategoryDataset> sets = new ArrayList<>();
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for(int i = 0; i<series.size();i++){
+            dataset = new DefaultCategoryDataset();
+            for(int j=0; j<series.get(i).values.size();j++){
+                dataset.setValue(series.get(i).values.get(j),series.get(i).seriesIndicator,Integer.toString(2020-j));
+            }
+            sets.add(dataset);
+        }
+        root.add()*/
     }
-
 }

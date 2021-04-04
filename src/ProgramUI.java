@@ -103,11 +103,11 @@ public class ProgramUI extends JFrame{
                 // Does this item have country properties
                 // Use this to get country Object
                 Country selected = cd.getCountrydatabase().get(countryDropdown.getSelectedIndex());
-                /**
+                /*
                  System.out.println("Start year of selected country: "+ selected.years.getStart());
                  System.out.println("End year of selected country: "+selected.years.getEnd());
                 For diagnostics
-                 **/
+                 */
 
                 for(int i = selected.years.getStart() ; i<selected.years.getEnd(); i++){
                     yearEndDropdown.addItem((Integer) i);
@@ -184,7 +184,8 @@ public class ProgramUI extends JFrame{
             DataParser dp = new DataParser(indicators,  country.countryCode, Integer.toString(country.years.getStart()),  Integer.toString(country.years.getEnd()));
 
             // NEXT : Hook to dataprocessor
-            DataProcessor dataProcessor = new DataProcessor(main.center, country);
+            // series, jframe,
+            DataProcessor dataProcessor = new DataProcessor(main.center, dp.getSeries(), position);
 
         }
     }
@@ -230,9 +231,5 @@ public class ProgramUI extends JFrame{
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         ProgramUI GUI = new ProgramUI();
         GUI.setVisible(true);
-
-
-
     }
-
 }
