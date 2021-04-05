@@ -29,6 +29,7 @@ public class ProgramUI extends JFrame{
     private JComboBox viewDropdown;
     private JPanel center;
     private CountryDatabase countDB = null;
+    private String[][] indicators;
 
     /***
      * Constructor does the following :
@@ -43,6 +44,20 @@ public class ProgramUI extends JFrame{
      */
 
     public ProgramUI() throws FileNotFoundException {
+        indicators = new String[][]{
+                    {"EN.ATM.CO2E.PC", "EG.USE.PCAP.KG.OE", "EN.ATM.PM25.MC.M3"},
+                    {"EN.ATM.PM25.MC.M3", "AG.LND.FRST.ZS"},
+                    {"EN.ATM.CO2E.PC", "NY.GDP.PCAP.CD"},
+                    {"AG.LND.FRST.ZS"},
+                    {"SE.XPD.TOTL.GD.ZS"},
+                    {"SH.MED.BEDS.ZS", "SE.XPD.TOTL.GD.ZS"},
+                    {"SH.XPD.CHEX.GD.ZS","NY.GDP.PCAP.CD", "SP.DYN.IMRT.IN"},
+                    {"SE.XPD.TOTL.GD.ZS", "SH.XPD.CHEX.GD.ZS"},
+
+            };
+        // Same numbers, different implementation.
+
+        add(center);
         setSize(1400,1000);
         setTitle("Country Statistics -- Alpha Knot inc");
         add(rootPanel);
@@ -59,7 +74,11 @@ public class ProgramUI extends JFrame{
 
     }
 
-// We will need multiple actionListeners for each task, I'll try renaming each class to be indicative of what needs to be done ~ marz
+    public JPanel getCenter() {
+        return center;
+    }
+
+    // We will need multiple actionListeners for each task, I'll try renaming each class to be indicative of what needs to be done ~ marz
     static class countryDropdownClicked implements ActionListener{
         JComboBox countryDropdown;
         JComboBox yearStartDropdown;
@@ -149,43 +168,18 @@ public class ProgramUI extends JFrame{
             Country country = cd.getCountrydatabase().get(countryDropdown.getSelectedIndex());
             // We parse that to populate the "values" array within coutries.
             System.out.println("Analyzing");
-            //TODO: Indicator from analysisdropdown needed for parsing, possible unhardcode
 
-            // FRICK I HATE HARD-CODING THIS SOLUTION UGH SOMONE END THIS SHIT ALREADY IM MAD
             int position = analysisDropdown.getSelectedIndex();
-            String[] indicators = new String[0];
-            // There are 8 options here:
-            if(position == 0){
-                indicators = new String[]{"EN.ATM.CO2E.PC", "EG.USE.PCAP.KG.OE", "EN.ATM.PM25.MC.M3"};
-            }
-            else if(position ==1){
-                indicators = new String[]{"EN.ATM.PM25.MC.M3", "AG.LND.FRST.ZS"};
-            }
-            else if(position == 2){
-                indicators = new String[]{"EN.ATM.CO2E.PC", "NY.GDP.PCAP.CD"};
-            }
-            else if(position ==3){
-                indicators = new String[]{"AG.LND.FRST.ZS"};
-            }
-            else if(position == 4){
-                indicators = new String[]{"SE.XPD.TOTL.GD.ZS"};
-            }
-            else if(position ==5){
-                indicators = new String[]{"SH.MED.BEDS.ZS", "SE.XPD.TOTL.GD.ZS"};
-            }
-            else if(position == 6){
-                indicators = new String[]{"SH.XPD.CHEX.GD.ZS","NY.GDP.PCAP.CD", "SP.DYN.IMRT.IN"};
-            }
-            else if(position ==7){
-                indicators = new String[]{"SE.XPD.TOTL.GD.ZS", "SH.XPD.CHEX.GD.ZS"};
-            }
 
-
-            DataParser dp = new DataParser(indicators,  country.countryCode, Integer.toString(country.years.getStart()),  Integer.toString(country.years.getEnd()));
+            DataParser dp = new DataParser(main.indicators[position],  country.countryCode, Integer.toString(country.years.getStart()),  Integer.toString(country.years.getEnd()));
 
             // NEXT : Hook to dataprocessor
             // series, jframe,
-            DataProcessor dataProcessor = new DataProcessor(main.center, dp.getSeries(), position);
+            try {
+                DataProcessor dataProcessor = new DataProcessor(main, dp.getSeries(), position);
+            } catch (FileNotFoundException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            }
 
         }
     }
