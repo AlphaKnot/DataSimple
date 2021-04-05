@@ -82,7 +82,7 @@ public class LoginInterface extends JFrame implements ActionListener{
         String password = password_text.getText();
 
         // comparing the user input to the credentials database
-        if (database.getValue(userName.trim()).equals(password.trim())){
+        if (database.getValue(userName.trim()) != null && database.getValue(userName.trim()).equals(password.trim())){
             ProgramUI mainUI = null;
             try {
                 mainUI = new ProgramUI();
