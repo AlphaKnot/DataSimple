@@ -51,7 +51,7 @@ public class DataParser {
         this.country_code = country_code;
         this.yearStart = yearStart;
         this.yearEnd = yearEnd;
-        for (int j = 0; j< indicator.length; j++) {
+        for (int j = 0; j < indicator.length; j++) {
             // Reinit if needed
             ArrayList<Float> values = new ArrayList<>();
             ArrayList<Integer> valid_years = new ArrayList<>();
@@ -99,66 +99,67 @@ public class DataParser {
                     JsonArray jsonArray = new JsonParser().parse(inline).getAsJsonArray();
 
                     int size = jsonArray.size();
+                    if (size > 1) {
+                        int sizeOfResults = jsonArray.get(1).getAsJsonArray().size();
 
-                    int sizeOfResults = jsonArray.get(1).getAsJsonArray().size();
+                        int year = 0;
 
-                    int year = 0;
+                        for (int i = 0; i < sizeOfResults; i++) {
 
-                    for (int i = 0; i < sizeOfResults; i++) {
+                            // GET FOR EACH ENTRY THE YEAR FROM THE “date” FIELD
 
-                        // GET FOR EACH ENTRY THE YEAR FROM THE “date” FIELD
+                            year = jsonArray.get(1).getAsJsonArray().get(i).getAsJsonObject().get("date").getAsInt();
 
-                        year = jsonArray.get(1).getAsJsonArray().get(i).getAsJsonObject().get("date").getAsInt();
+                            // CHECK IF THERE IS A VALUE FOR THE POPULATION FOR A
 
-                        // CHECK IF THERE IS A VALUE FOR THE POPULATION FOR A
+                            //  GIVEN YEAR
 
-                        //  GIVEN YEAR
-
-                        if (jsonArray.get(1).getAsJsonArray().get(i).getAsJsonObject().get("value").isJsonNull() ) {
-                            // Note Ammar , should this be value = 0 or continue?
+                            if (jsonArray.get(1).getAsJsonArray().get(i).getAsJsonObject().get("value").isJsonNull()) {
+                                // Note Ammar , should this be value = 0 or continue?
                             /*
                             valid_years.add(year);
                             values.add(0.0F);
 
                              */
-                            continue;
+                                continue;
+                            } else {
+
+                                // GET THE POPULATION FOR THE GIVEN YEAR FROM THE
+
+                                // “value” FIELD
+                                valid_years.add(year);
+                                valueForYear = jsonArray.get(1).getAsJsonArray().get(i).getAsJsonObject().get("value").getAsFloat();
+
+                                System.out.println(indicator[j] + " value for " + year + " is " + valueForYear); // Debugging print line;
+                                // Add value to arrayList
+                                values.add(valueForYear);
+
+                                cumulativeValue += valueForYear;
+                            }
                         }
-                        else {
 
-                            // GET THE POPULATION FOR THE GIVEN YEAR FROM THE
+                        System.out.println("The average population over the selected years is " + cumulativeValue / sizeOfResults);
+                        cum_value = cumulativeValue;
+                        cum_avg = cum_value / sizeOfResults;
 
-                            // “value” FIELD
-                            valid_years.add(year);
-                            valueForYear = jsonArray.get(1).getAsJsonArray().get(i).getAsJsonObject().get("value").getAsFloat();
-
-                            System.out.println(indicator[j] + " value for " + year + " is " + valueForYear); // Debugging print line;
-                            // Add value to arrayList
-                            values.add(valueForYear);
-
-                            cumulativeValue += valueForYear;
-                        }
+                    } else {//Popup window, tell user to try again}
                     }
 
-                    System.out.println("The average population over the selected years is " + cumulativeValue / sizeOfResults);
-                    cum_value = cumulativeValue;
-                    cum_avg = cum_value / sizeOfResults;
 
+                    System.out.println("Data successfully parsed in var values");
+                    ParsedSeries p = new ParsedSeries(indicator[j], values, valid_years, cum_avg);
+
+                    // Adding series here
+                    series.add(p);
                 }
+
 
             } catch (IOException e) {
 
                 e.printStackTrace();
 
             }
-
-            System.out.println("Data successfully parsed in var values");
-            ParsedSeries p = new ParsedSeries(indicator[j],values, valid_years,cum_avg);
-
-            // Adding series here
-            series.add(p);
         }
-
-
     }
     /***
      * Getter functions for the class attributes.

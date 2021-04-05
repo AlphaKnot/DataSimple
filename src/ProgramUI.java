@@ -28,8 +28,11 @@ public class ProgramUI extends JFrame{
     private JButton recalculate_button;
     private JComboBox viewDropdown;
     private JPanel center;
+    private JPanel north;
+    private JPanel south;
     private CountryDatabase countDB = null;
     private String[][] indicators;
+    private String[] AnalysisLabels;
 
     /***
      * Constructor does the following :
@@ -55,9 +58,14 @@ public class ProgramUI extends JFrame{
                     {"SE.XPD.TOTL.GD.ZS", "SH.XPD.CHEX.GD.ZS"},
 
             };
+        AnalysisLabels = new String[analysisDropDown.getItemCount()];
+        for(int i = 0; i<AnalysisLabels.length;i++){
+            AnalysisLabels[i] = analysisDropDown.getItemAt(i).toString();
+        }
+
         // Same numbers, different implementation.
 
-        add(center);
+        center.setLayout(new FlowLayout());
         setSize(1400,1000);
         setTitle("Country Statistics -- Alpha Knot inc");
         add(rootPanel);
@@ -76,6 +84,18 @@ public class ProgramUI extends JFrame{
 
     public JPanel getCenter() {
         return center;
+    }
+    public void refreshCenter(){
+         center.removeAll();
+         center.setLayout(new FlowLayout());
+    }
+
+    public String[] getAnalysisLabels() {
+        return AnalysisLabels;
+    }
+
+    public String[][] getIndicators() {
+        return indicators;
     }
 
     // We will need multiple actionListeners for each task, I'll try renaming each class to be indicative of what needs to be done ~ marz
@@ -162,7 +182,9 @@ public class ProgramUI extends JFrame{
     }
         @Override
         public void actionPerformed(ActionEvent e) {
+            main.center.removeAll();
             // This call to method will call the necessary action to calculate the graph required, possibly use jenessa's code? ~ marz
+
             System.out.println("Recalculating!");
             // This gives us the country selected.
             Country country = cd.getCountrydatabase().get(countryDropdown.getSelectedIndex());
