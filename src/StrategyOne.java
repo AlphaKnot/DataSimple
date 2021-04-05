@@ -10,6 +10,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -29,6 +30,7 @@ public class StrategyOne extends JFrame {
         CreateLineChart(root,series,method);
         createScatter(root,series,method);
         createBar(root,series,method);
+        createTimeSeries(root,series,method);
     }
     public void CreateLineChart(ProgramUI root, ArrayList<ParsedSeries> series, int method){
         String[] seriesName = new String[]{
@@ -146,6 +148,12 @@ public class StrategyOne extends JFrame {
 
     }
     public void createBar(ProgramUI root, ArrayList<ParsedSeries> series, int method){
+        String[] seriesName = new String[]{
+                "CO2 emissions (metric tons per capita)",
+                "Energy use (kg of oil equivalent per capita)",
+                "PM2.5 air pollution, mean annual exposure (micrograms per cubic meter)",
+
+        };
         // creating an array list of DefaultCategory datasets
         ArrayList<DefaultCategoryDataset> datasets = new ArrayList<>();
 
@@ -155,7 +163,7 @@ public class StrategyOne extends JFrame {
 
             for (int j = 0; j < series.get(i).getValues().size(); j++) {
 
-                barseries.setValue(series.get(i).getValues().get(j),series.get(i).getSeriesIndicator(), series.get(i).xDelimitation.get(j));
+                barseries.setValue(series.get(i).getValues().get(j),seriesName[i], series.get(i).xDelimitation.get(j));
                 //setValue(value, indicator, year)
                 //add xy (year, value)
                 // YEAR    VALUE
@@ -198,7 +206,64 @@ public class StrategyOne extends JFrame {
         root.getCenter().add(chartPanel);
         root.validate();
     }
+    private void createTimeSeries(ProgramUI root, ArrayList<ParsedSeries> series, int method) {
+        String[] seriesName = new String[]{
+                "CO2 emissions (metric tons per capita)",
+                "Energy use (kg of oil equivalent per capita)",
+                "PM2.5 air pollution, mean annual exposure (micrograms per cubic meter)",
 
+        };
+        analysisNames = root.getAnalysisLabels();
+        ArrayList<TimeSeries> sets = new ArrayList<>();
+
+        // Loop to create sets of series.
+        for (int i = 0; i<series.size(); i++) {
+            TimeSeries timeseries = new TimeSeries(seriesName[i]);
+            for (int j = 0; j < series.get(i).getValues().size(); j++) {
+                // Getting year will need to be managed for the series some how
+                timeseries.add(new Year(series.get(i).xDelimitation.get(j)), series.get(i).getValues().get(j));
+            }
+            sets.add(timeseries);
+        }
+
+        // Add sets to XYSeries Collection
+        TimeSeriesCollection dataset = new TimeSeriesCollection();
+        dataset.addSeries(sets.get(0));
+        dataset.addSeries(sets.get(1));
+        dataset.addSeries(sets.get(2));
+
+
+
+        XYPlot plot = new XYPlot();
+        XYSplineRenderer splinerenderer1 = new XYSplineRenderer();
+        XYSplineRenderer splinerenderer2 = new XYSplineRenderer();
+
+        plot.setDataset(0, dataset);
+        plot.setRenderer(0, splinerenderer1);
+        DateAxis domainAxis = new DateAxis("Year");
+        plot.setDomainAxis(domainAxis);
+        plot.setRangeAxis(new NumberAxis(""));
+
+        plot.setDataset(1, dataset);
+        plot.setRenderer(1, splinerenderer2);
+        // This needs to be changed to reflect the strat
+        // Note UNITS
+        plot.setRangeAxis(1, new NumberAxis("US$"));
+
+        plot.mapDatasetToRangeAxis(0, 0);// 1st dataset to 1st y-axis
+        plot.mapDatasetToRangeAxis(1, 1); // 2nd dataset to 2nd y-axis
+
+        JFreeChart chart = new JFreeChart(root.getAnalysisLabels()[method],
+                new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
+
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(600, 400));
+        chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        chartPanel.setBackground(Color.white);
+        root.getCenter().add(chartPanel);
+        root.validate();
+
+    }
     public void OutputGraphs(ProgramUI root, ArrayList<ParsedSeries> series, int method){
 
 

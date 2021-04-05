@@ -193,7 +193,7 @@ public class ProgramUI extends JFrame{
 
             int position = analysisDropdown.getSelectedIndex();
 
-            DataParser dp = new DataParser(main.indicators[position],  country.countryCode, Integer.toString(country.years.getStart()),  Integer.toString(country.years.getEnd()));
+            DataParser dp = new DataParser(main.indicators[position],  country.countryCode, (String) Integer.toString(country.years.getStart()+main.yearStartDropdown.getSelectedIndex()),(String) Integer.toString(country.years.getStart()+main.yearEndDropDown.getSelectedIndex()));
 
             // NEXT : Hook to dataprocessor
             // series, jframe,

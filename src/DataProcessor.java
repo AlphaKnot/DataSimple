@@ -32,9 +32,12 @@ public class DataProcessor {
         root.add()
         Call for all strats.
         */
+        try {
         switch(method){
             case 0:
-                StrategyOne st1 = new StrategyOne(root,  series,  method);
+
+                    StrategyOne st1 = new StrategyOne(root, series, method);
+
 
                 break;
             case 1:
@@ -57,6 +60,9 @@ public class DataProcessor {
             default:
                 System.out.println("Mistake code -- 3312");
 
+        }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(root, "Country has no usable data, please select another country or another analysis");
         }
 
     }
