@@ -69,6 +69,9 @@ public class Analysis extends JFrame {
 
 
         }
+        public void creatPieChart(ProgramUI root, int method, DefaultCategoryDataset piechart){
+
+        }
         public void createScatter(ProgramUI root, int method, TimeSeriesCollection scatterDataSet) {
 
             // add the data to the chart
@@ -174,8 +177,54 @@ public class Analysis extends JFrame {
             root.validate();
 
         }
-        public void OutputGraphs(ProgramUI root, ArrayList<ParsedSeries> series, int method){
+        public void createReport(ProgramUI root, ArrayList<ParsedSeries> series, int method) {
+            JTextArea report = new JTextArea();
+            report.setEditable(false);
+            report.setPreferredSize(new Dimension(400, 300));
+            report.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+            report.setBackground(Color.white);
 
+
+            analysisNames = root.getAnalysisLabels();
+
+            String[] seriesName = new String[]{
+                "Current Health Expenditure per capita",
+                "Infant Mortality Rate (per 1000 live births)",
+
+            };
+
+     /*   reportMessage = "Mortality vs Expenses & Hospital Beds\n" + "==============================\n" + "Year 2018:\n"
+                + "\tMortality/1000 births => 5.6\n" + "\tHealth Expenditure per Capita => 10624\n"
+                + "\tHospital Beds/1000 people => 2.92\n" + "\n" + "Year 2017:\n" + "\tMortality/1000 births => 5.7\n"
+                + "\tHealth Expenditure per Capita => 10209\n" + "\tHospital Beds/1000 people => 2.87\n" + "\n"
+                + "Year 2016:\n" + "\tMortality/1000 births => 5.8\n" + "\tHealth Expenditure per Capita => 9877\n"
+                + "\tHospital Beds/1000 people => 2.77\n";*/
+
+            ArrayList<String> reportMessages = new ArrayList<>();
+            String message = "";
+            String title;
+            String finalMessage;
+
+            title = analysisNames[method] + "=============================\n";
+            for (int i = 0; i < series.size(); i++) {
+                for (int j = 0; j < series.get(i).getValues().size(); j++) {
+                    message = seriesName[i] + " had a value in:" + series.get(i).xDelimitation.get(j) + "of : " + series.get(i).getValues().get(j) + "\n";
+                }
+                reportMessages.add(message);
+            }
+            finalMessage = title + reportMessages;
+            report.setText(finalMessage);
+
+            JScrollPane outputScrollPane = new JScrollPane(report);
+            //west.add(outputScrollPane);
+
+            root.getCenter().add(outputScrollPane);
+            root.validate();
+
+
+        }
+
+        public void OutputGraphs(ProgramUI root, ArrayList<ParsedSeries> series, int method){
 
         }
 }
