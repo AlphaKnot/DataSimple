@@ -31,12 +31,88 @@ import java.util.concurrent.Flow;
 public class StrategyEight {
 
     String[] analysisNames;
+    String[] seriesName;
+    ProgramUI root;
+    ArrayList<TimeSeries> timeSeriesDatasets;
+    ArrayList<TimeSeries> scatterSeriesDatasets;
+    ArrayList<DefaultCategoryDataset> barSeriesDataSets;
+    ArrayList<XYSeries> XYSeriesSets;
+    ArrayList<DefaultCategoryDataset> reportDataSets;
 
     // Ratio of Government expenditure on education,
     // total (% of GDP) vs Current health expenditure (% of GDP).
     public StrategyEight(ProgramUI root, ArrayList<ParsedSeries> series, int method){
         createPieS8(root, series, method);
-        createScatter(root,series,method);
+
+
+
+        // Ratio of Government expenditure on education, total (% of GDP) vs Current health expenditure (% of GDP)
+        seriesName = new String[] {"Education Expenditure to GDP", "Health Expenditure to GDP"};
+
+        this.root = root;
+        analysisNames = root.getAnalysisLabels();
+        timeSeriesDatasets = new ArrayList<>();
+        barSeriesDataSets = new ArrayList<>();
+        XYSeriesSets = new ArrayList<>();
+        scatterSeriesDatasets = new ArrayList<>();
+        //DefaultCategoryDataset reportseries = new DefaultCategoryDataset();
+
+        // this part is setting up the report-jen
+        ArrayList<String> reportMessages = new ArrayList<>();
+        String message = "";
+        String title;
+        String finalMessage;
+
+        
+        //title = analysisNames[method] + "=============================\n";
+
+        // need to create report[], scatter[X], bar[], line[X], pie[FIX]
+        for (int i = 0; i < series.size(); i++) {
+            XYSeries xyseries = new XYSeries(seriesName[i]);
+            TimeSeries scatterseries = new TimeSeries(seriesName[i]);
+            TimeSeries timeseries = new TimeSeries(seriesName[i]);
+
+
+            DefaultCategoryDataset barseries = new DefaultCategoryDataset();
+            for (int j = 0; j < series.get(i).getValues().size(); j++) {
+                // do division edu/health
+                // maybe fix the 0 and 1 getters???
+                double val = series.get(0).getValues().get(i) / series.get(1).getValues().get(j);
+                xyseries.add(series.get(i).xDelimitation.get(j),(Number) val);
+                scatterseries.add(new Year(series.get(i).xDelimitation.get(j)),val);
+                barseries.setValue(val,seriesName[i], series.get(i).xDelimitation.get(j));
+                timeseries.add(new Year(series.get(i).xDelimitation.get(j)), val);
+
+                // the report message to the added to the array-jen
+                message = seriesName[i] + " had a value in:" + series.get(i).xDelimitation.get(j) + "of : " + series.get(i).getValues().get(j) + "\n";
+            }
+            XYSeriesSets.add(xyseries);
+            timeSeriesDatasets.add(scatterseries);
+            barSeriesDataSets.add(barseries);
+            scatterSeriesDatasets.add(scatterseries);
+
+            // adding the message to the array-jen
+            reportMessages.add(message);
+
+        }
+        //finalMessage = title + reportMessages;
+
+
+        XYSeriesCollection XYSeriesDataset = new XYSeriesCollection();
+        TimeSeriesCollection scatterDataSet = new TimeSeriesCollection();
+        TimeSeriesCollection timeSeriesDataSet = new TimeSeriesCollection();
+
+        XYSeriesDataset.addSeries(XYSeriesSets.get(0));
+        scatterDataSet.addSeries(scatterSeriesDatasets.get(0));
+        timeSeriesDataSet.addSeries(timeSeriesDatasets.get(0));
+
+        Analysis strategyEight = new Analysis(analysisNames, root, timeSeriesDatasets, scatterSeriesDatasets, barSeriesDataSets, XYSeriesSets);
+        strategyEight.CreateLineChart(root, method, XYSeriesDataset);
+        strategyEight.createScatter(root, method, scatterDataSet);
+        strategyEight.createTimeSeries(root, method, timeSeriesDataSet);
+        
+        // creating the report
+        strategyEight.createReport(root, method,reportMessages);
 
     }
 
@@ -64,8 +140,6 @@ public class StrategyEight {
             datasets.add(pieseries);
         }
 
-        //JFreeChart pieChart = ChartFactory.createMultiplePieChart(analysisNames[method], datasets.get(),
-                //TableOrder.BY_COLUMN, true, true, false);
 
         // i frankly have no idea if this works i fucking hate pie charts
         JFreeChart pieChart = ChartFactory.createMultiplePieChart(analysisNames[method], datasets.get(0), TableOrder.BY_COLUMN, true, true, false);
@@ -83,10 +157,6 @@ public class StrategyEight {
         root.getCenter().add(chartPanel);
         root.getCenter().add(chartPanel1);
         root.validate();
-    }
-
-    public void createScatter(ProgramUI root, ArrayList<ParsedSeries> series, int method){
-
     }
 }
 
