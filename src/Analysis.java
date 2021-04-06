@@ -177,7 +177,8 @@ public class Analysis extends JFrame {
             root.validate();
 
         }
-        public void createReport(ProgramUI root, ArrayList<ParsedSeries> series, int method) {
+       
+        public void createReport(ProgramUI root, int method, ArrayList<String> reportMessages) {
             JTextArea report = new JTextArea();
             report.setEditable(false);
             report.setPreferredSize(new Dimension(400, 300));
@@ -187,11 +188,11 @@ public class Analysis extends JFrame {
 
             analysisNames = root.getAnalysisLabels();
 
-            String[] seriesName = new String[]{
+         /*   String[] seriesName = new String[]{
                 "Current Health Expenditure per capita",
                 "Infant Mortality Rate (per 1000 live births)",
 
-            };
+            };*/
 
      /*   reportMessage = "Mortality vs Expenses & Hospital Beds\n" + "==============================\n" + "Year 2018:\n"
                 + "\tMortality/1000 births => 5.6\n" + "\tHealth Expenditure per Capita => 10624\n"
@@ -200,19 +201,22 @@ public class Analysis extends JFrame {
                 + "Year 2016:\n" + "\tMortality/1000 births => 5.8\n" + "\tHealth Expenditure per Capita => 9877\n"
                 + "\tHospital Beds/1000 people => 2.77\n";*/
 
-            ArrayList<String> reportMessages = new ArrayList<>();
-            String message = "";
+            //ArrayList<String> reportMessages = new ArrayList<>();
+            //String message = "";
             String title;
             String finalMessage;
 
             title = analysisNames[method] + "=============================\n";
-            for (int i = 0; i < series.size(); i++) {
+           /* for (int i = 0; i < series.size(); i++) {
                 for (int j = 0; j < series.get(i).getValues().size(); j++) {
                     message = seriesName[i] + " had a value in:" + series.get(i).xDelimitation.get(j) + "of : " + series.get(i).getValues().get(j) + "\n";
                 }
                 reportMessages.add(message);
             }
             finalMessage = title + reportMessages;
+*/
+            finalMessage = title + reportMessages;
+
             report.setText(finalMessage);
 
             JScrollPane outputScrollPane = new JScrollPane(report);
