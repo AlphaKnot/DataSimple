@@ -57,7 +57,7 @@ public class LoginInterface extends JFrame implements ActionListener{
         password_text.addActionListener(this);
         add(panel, BorderLayout.CENTER);
         setTitle("Please Login Here !");
-        setSize(300, 100);
+        setSize(450, 150);
         setVisible(true);
 
     }
@@ -94,7 +94,7 @@ public class LoginInterface extends JFrame implements ActionListener{
         }
         // if there is an error, will
         else{
-            message.setText(" Login Error");
+            message.setText("Invalid username or password.");
         }
 
     }
