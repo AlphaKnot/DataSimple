@@ -20,6 +20,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Note: series.get(0).xDelimitation.get(0) will return the first year
+ *
+ *
+ *
+ */
+
+
 public class Analysis extends JFrame {
         String[] analysisNames ;
         ProgramUI root;
@@ -36,13 +44,14 @@ public class Analysis extends JFrame {
             this.XYSeriesSets = XYSeriesSets;
 
         }
-        public void CreateLineChart(ProgramUI root, int method, XYSeriesCollection dataset){
+    // default width = 600, default height = 400, default xAxisLabel = "Years", yAxisLabel = "$US"
+        public void CreateLineChart(ProgramUI root, int method, XYSeriesCollection dataset, String xAxisLabel, String yAxisLabel, int width, int height){
 
 
             JFreeChart chart =  ChartFactory.createXYLineChart(
                     analysisNames[method], // Title
-                    "Years", // x-axis Label
-                    "", // y-axis Label
+                    xAxisLabel, // x-axis Label
+                    yAxisLabel, // y-axis Label
                     dataset, // Dataset
                     PlotOrientation.VERTICAL, // Plot Orientation
                     true, // Show Legend
@@ -54,7 +63,7 @@ public class Analysis extends JFrame {
             ChartPanel chartPanel = new ChartPanel(chart){
                 @Override
                 public Dimension getPreferredSize() {
-                    return new Dimension(600, 400);
+                    return new Dimension(width, height);
                 }
 
 
@@ -72,7 +81,8 @@ public class Analysis extends JFrame {
         public void creatPieChart(ProgramUI root, int method, DefaultCategoryDataset piechart){
 
         }
-        public void createScatter(ProgramUI root, int method, TimeSeriesCollection scatterDataSet) {
+    // default width = 600, default height = 400, default xAxisLabel = "Years", yAxisLabel = "$US"
+        public void createScatter(ProgramUI root, int method, TimeSeriesCollection scatterDataSet, String labelRange, String labelDomain, int width, int height) {
 
             // add the data to the chart
             XYPlot plot = new XYPlot();
@@ -81,15 +91,12 @@ public class Analysis extends JFrame {
 
             plot.setDataset(0, scatterDataSet);
             plot.setRenderer(0, itemrenderer1);
-            DateAxis domainAxis = new DateAxis("Year");
+            DateAxis domainAxis = new DateAxis(labelDomain);
             plot.setDomainAxis(domainAxis);
-            plot.setRangeAxis(new NumberAxis(""));
-
-            //plot.setDataset(1, dataset2);
-            // plot.setRenderer(1, itemrenderer2);
-            plot.setRangeAxis(1, new NumberAxis("US$"));
+            plot.setRangeAxis(1, new NumberAxis(labelRange));
 
             plot.mapDatasetToRangeAxis(0, 0);// 1st dataset to 1st y-axis
+
             plot.mapDatasetToRangeAxis(1, 1); // 2nd dataset to 2nd y-axis
 
             JFreeChart scatterChart = new JFreeChart(
@@ -100,7 +107,7 @@ public class Analysis extends JFrame {
 
             ChartPanel chartPanel = new ChartPanel(scatterChart);
             chartPanel.setBackground(Color.white);
-            chartPanel.setPreferredSize(new Dimension(600, 400));
+            chartPanel.setPreferredSize(new Dimension(width, height));
             chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
             // to add to the program ui
@@ -108,7 +115,8 @@ public class Analysis extends JFrame {
             root.validate();
 
         }
-        public void createBar(ProgramUI root,int method, ArrayList<DefaultCategoryDataset> datasets){
+    // default width = 600, default height = 400, default xAxisLabel = "Years", yAxisLabel = "$US"
+        public void createBar(ProgramUI root,int method, ArrayList<DefaultCategoryDataset> datasets, String xAxisLabel, String yAxisLabel, int width, int height){
 
             // add the data to the chart
             CategoryPlot plot = new CategoryPlot();
@@ -117,13 +125,13 @@ public class Analysis extends JFrame {
 
             plot.setDataset(0, datasets.get(0));
             plot.setRenderer(0, barrenderer1);
-            CategoryAxis domainAxis = new CategoryAxis("Year");
-            plot.setDomainAxis(domainAxis);
-            plot.setRangeAxis(new NumberAxis(""));
+
 
             plot.setDataset(1, datasets.get(1));
             plot.setRenderer(1, barrenderer2);
-            plot.setRangeAxis(1, new NumberAxis("US$"));
+
+            plot.setDomainAxis(0,new CategoryAxis(xAxisLabel));
+            plot.setRangeAxis(1, new NumberAxis(yAxisLabel));
 
             plot.mapDatasetToRangeAxis(0, 0);// 1st dataset to 1st y-axis
             plot.mapDatasetToRangeAxis(1, 1); // 2nd dataset to 2nd y-axis
@@ -133,7 +141,7 @@ public class Analysis extends JFrame {
 
 
             ChartPanel chartPanel = new ChartPanel(barChart);
-            chartPanel.setPreferredSize(new Dimension(600, 400));
+            chartPanel.setPreferredSize(new Dimension(width, height));
             chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
             chartPanel.setBackground(Color.white);
 
@@ -141,7 +149,8 @@ public class Analysis extends JFrame {
             root.getCenter().add(chartPanel);
             root.validate();
         }
-        public void createTimeSeries(ProgramUI root,int method, TimeSeriesCollection dataset) {
+        // default width = 600, default height = 400, default xAxisLabel = "Years", yAxisLabel = "$US"
+        public void createTimeSeries(ProgramUI root,int method, TimeSeriesCollection dataset, String xAxisLabel, String yAxisLabel, int width, int height) {
             // Add sets to XYSeries Collection
 
 
@@ -153,15 +162,14 @@ public class Analysis extends JFrame {
 
             plot.setDataset(0, dataset);
             plot.setRenderer(0, splinerenderer1);
-            DateAxis domainAxis = new DateAxis("Year");
-            plot.setDomainAxis(domainAxis);
-            plot.setRangeAxis(new NumberAxis(""));
+
 
             plot.setDataset(1, dataset);
             plot.setRenderer(1, splinerenderer2);
 
 
-            plot.setRangeAxis(1, new NumberAxis("US$"));
+            plot.setDomainAxis(new DateAxis(xAxisLabel));
+            plot.setRangeAxis(1, new NumberAxis(yAxisLabel));
 
             plot.mapDatasetToRangeAxis(0, 0);// 1st dataset to 1st y-axis
             plot.mapDatasetToRangeAxis(1, 1); // 2nd dataset to 2nd y-axis
@@ -170,58 +178,25 @@ public class Analysis extends JFrame {
                     new Font("Serif", Font.BOLD, 18), plot, true);
 
             ChartPanel chartPanel = new ChartPanel(chart);
-            chartPanel.setPreferredSize(new Dimension(600, 400));
+            chartPanel.setPreferredSize(new Dimension(width, height));
             chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
             chartPanel.setBackground(Color.white);
             root.getCenter().add(chartPanel);
             root.validate();
 
         }
-       
-        public void createReport(ProgramUI root, int method, ArrayList<String> reportMessages) {
+    // default width = 400, default height = 300, default xAxisLabel = "Years", yAxisLabel = "$US"
+        public void createReport(ProgramUI root, String finalMessage,int width, int height) {
             JTextArea report = new JTextArea();
             report.setEditable(false);
-            report.setPreferredSize(new Dimension(400, 300));
+            report.setPreferredSize(new Dimension(width, height));
             report.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
             report.setBackground(Color.white);
 
-
-            analysisNames = root.getAnalysisLabels();
-
-         /*   String[] seriesName = new String[]{
-                "Current Health Expenditure per capita",
-                "Infant Mortality Rate (per 1000 live births)",
-
-            };*/
-
-     /*   reportMessage = "Mortality vs Expenses & Hospital Beds\n" + "==============================\n" + "Year 2018:\n"
-                + "\tMortality/1000 births => 5.6\n" + "\tHealth Expenditure per Capita => 10624\n"
-                + "\tHospital Beds/1000 people => 2.92\n" + "\n" + "Year 2017:\n" + "\tMortality/1000 births => 5.7\n"
-                + "\tHealth Expenditure per Capita => 10209\n" + "\tHospital Beds/1000 people => 2.87\n" + "\n"
-                + "Year 2016:\n" + "\tMortality/1000 births => 5.8\n" + "\tHealth Expenditure per Capita => 9877\n"
-                + "\tHospital Beds/1000 people => 2.77\n";*/
-
-            //ArrayList<String> reportMessages = new ArrayList<>();
-            //String message = "";
-            String title;
-            String finalMessage;
-
-            title = analysisNames[method] + "=============================\n";
-           /* for (int i = 0; i < series.size(); i++) {
-                for (int j = 0; j < series.get(i).getValues().size(); j++) {
-                    message = seriesName[i] + " had a value in:" + series.get(i).xDelimitation.get(j) + "of : " + series.get(i).getValues().get(j) + "\n";
-                }
-                reportMessages.add(message);
-            }
-            finalMessage = title + reportMessages;
-*/
-            finalMessage = title + reportMessages;
+            // check strat7 to see how to get this finalmessage string
 
             report.setText(finalMessage);
-
             JScrollPane outputScrollPane = new JScrollPane(report);
-            //west.add(outputScrollPane);
-
             root.getCenter().add(outputScrollPane);
             root.validate();
 
