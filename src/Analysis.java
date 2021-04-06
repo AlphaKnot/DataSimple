@@ -126,11 +126,14 @@ public class Analysis extends JFrame {
             plot.setDataset(0, datasets.get(0));
             plot.setRenderer(0, barrenderer1);
 
+            CategoryAxis domainAxis = new CategoryAxis(xAxisLabel);
+            plot.setDomainAxis(domainAxis);
+            plot.setRangeAxis(new NumberAxis(""));
 
             plot.setDataset(1, datasets.get(1));
             plot.setRenderer(1, barrenderer2);
 
-            plot.setDomainAxis(0,new CategoryAxis(xAxisLabel));
+
             plot.setRangeAxis(1, new NumberAxis(yAxisLabel));
 
             plot.mapDatasetToRangeAxis(0, 0);// 1st dataset to 1st y-axis
