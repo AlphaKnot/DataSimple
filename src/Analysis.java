@@ -82,7 +82,7 @@ public class Analysis extends JFrame {
 
         }
     // default width = 600, default height = 400, default xAxisLabel = "Years", yAxisLabel = "$US"
-        public void createScatter(ProgramUI root, int method, TimeSeriesCollection scatterDataSet, String labelRange, String labelDomain, int width, int height) {
+        public void createScatter(ProgramUI root, int method, TimeSeriesCollection scatterDataSet, String xAxisLabel, String yAxisLabel, int width, int height) {
 
             // add the data to the chart
             XYPlot plot = new XYPlot();
@@ -91,9 +91,13 @@ public class Analysis extends JFrame {
 
             plot.setDataset(0, scatterDataSet);
             plot.setRenderer(0, itemrenderer1);
-            DateAxis domainAxis = new DateAxis(labelDomain);
+
+
+            DateAxis domainAxis = new DateAxis(xAxisLabel);
             plot.setDomainAxis(domainAxis);
-            plot.setRangeAxis(1, new NumberAxis(labelRange));
+            plot.setRangeAxis(new NumberAxis(""));
+
+            plot.setRangeAxis(1, new NumberAxis(yAxisLabel));
 
             plot.mapDatasetToRangeAxis(0, 0);// 1st dataset to 1st y-axis
 
