@@ -36,6 +36,7 @@ public class StrategySeven {
         createLineChartS7(root, series, method);
         createScatterS7(root,series,method);
         createBarS7(root,series,method);
+        createReportS7(root,series,method);
 
     }
 
@@ -146,7 +147,7 @@ public class StrategySeven {
 
         String[] seriesName = new String[]{
                 "Current Health Expenditure per capita",
-                "Infant Mortality Rate (per 1000 live births)",
+                "Infant Mortality Rate (per 1000 live births)"
 
         };
 
@@ -191,7 +192,7 @@ public class StrategySeven {
         plot.mapDatasetToRangeAxis(0, 0);// 1st dataset to 1st y-axis
         plot.mapDatasetToRangeAxis(1, 1); // 2nd dataset to 2nd y-axis
 
-        JFreeChart scatterChart = new JFreeChart("Infant Mortality vs Health Expenditure",
+        JFreeChart scatterChart = new JFreeChart(analysisNames[method],
                 new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
 
         ChartPanel chartPanel = new ChartPanel(scatterChart);
@@ -218,6 +219,8 @@ public class StrategySeven {
                 "Infant Mortality Rate (per 1000 live births)",
 
         };
+
+        analysisNames = root.getAnalysisLabels();
 
         // creating an array list of DefaultCategory datasets
         ArrayList<DefaultCategoryDataset> datasets = new ArrayList<>();
@@ -258,7 +261,7 @@ public class StrategySeven {
         plot.mapDatasetToRangeAxis(0, 0);// 1st dataset to 1st y-axis
         plot.mapDatasetToRangeAxis(1, 1); // 2nd dataset to 2nd y-axis
 
-        JFreeChart barChart = new JFreeChart("Infant Mortality vs Health Expenditure",
+        JFreeChart barChart = new JFreeChart(analysisNames[method],
                 new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
 
 
@@ -280,7 +283,7 @@ public class StrategySeven {
      * @param series the datasets
      * @param method the index of the analysis chosen on the dropdown menu
      */
-    public void createReport(ProgramUI root, ArrayList<ParsedSeries> series, int method){
+    public void createReportS7(ProgramUI root, ArrayList<ParsedSeries> series, int method){
         JTextArea report = new JTextArea();
         report.setEditable(false);
         report.setPreferredSize(new Dimension(400, 300));
@@ -289,6 +292,8 @@ public class StrategySeven {
 
 
 
+
+        analysisNames = root.getAnalysisLabels();
 
         String[] seriesName = new String[]{
                 "Current Health Expenditure per capita",
@@ -306,9 +311,9 @@ public class StrategySeven {
         ArrayList<String> reportMessages = new ArrayList<>();
         String message = "";
         String title;
-        String finalMessage="";
+        String finalMessage;
 
-        title = "Infant Mortality vs Health Expenditure\n" + "=============================\n";
+        title = analysisNames[method] + "=============================\n";
         for (int i = 0; i < series.size(); i++){
             for (int j = 0; j <series.get(i).getValues().size(); j++){
                 message = seriesName[i] +" had a value in:" + series.get(i).xDelimitation.get(j) + "of : "+ series.get(i).getValues().get(j)+"\n";
