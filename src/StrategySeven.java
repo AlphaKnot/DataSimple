@@ -31,21 +31,82 @@ public class StrategySeven {
     // represents the dropdown of analyses
     String[] analysisNames;
 
+    String[] seriesName;
+    ProgramUI root;
+    ArrayList<TimeSeries> timeSeriesDatasets;
+    ArrayList<TimeSeries> scatterSeriesDatasets;
+    ArrayList<DefaultCategoryDataset> barSeriesDataSets;
+    ArrayList<XYSeries> XYSeriesSets;
+
     // the constructor
     public StrategySeven(ProgramUI root, ArrayList<ParsedSeries> series, int method){
-        createLineChartS7(root, series, method);
+    /*    createLineChartS7(root, series, method);
         createScatterS7(root,series,method);
         createBarS7(root,series,method);
-        createReportS7(root,series,method);
+        createReportS7(root,series,method);*/
 
+        String[] seriesName = new String[]{
+                "Current Health Expenditure per capita",
+                "Infant Mortality Rate (per 1000 live births)",
+        };
+
+        this.root = root;
+        analysisNames = root.getAnalysisLabels();
+
+        timeSeriesDatasets = new ArrayList<>();
+        barSeriesDataSets = new ArrayList<>();
+        XYSeriesSets = new ArrayList<>();
+        scatterSeriesDatasets = new ArrayList<>();
+
+
+        for (int i = 0; i <= series.size(); i++) {
+            XYSeries xyseries = new XYSeries(seriesName[i]);
+            TimeSeries scatterseries = new TimeSeries(seriesName[i]);
+            TimeSeries timeseries = new TimeSeries(seriesName[i]);
+            DefaultCategoryDataset barseries = new DefaultCategoryDataset();
+            for (int j = 0; j < series.get(i).getValues().size(); j++) {
+                xyseries.add(series.get(i).xDelimitation.get(j),series.get(i).getValues().get(j));
+                scatterseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
+                barseries.setValue(series.get(i).getValues().get(j),seriesName[i], series.get(i).xDelimitation.get(j));
+                timeseries.add(new Year(series.get(i).xDelimitation.get(j)), series.get(i).getValues().get(j));
+            }
+            XYSeriesSets.add(xyseries);
+            timeSeriesDatasets.add(scatterseries);
+            barSeriesDataSets.add(barseries);
+            scatterSeriesDatasets.add(scatterseries);
+
+        }
+        XYSeriesCollection XYSeriesDataset = new XYSeriesCollection();
+        XYSeriesDataset.addSeries(XYSeriesSets.get(0));
+        XYSeriesDataset.addSeries(XYSeriesSets.get(1));
+        //XYSeriesDataset.addSeries(XYSeriesSets.get(2));
+
+        TimeSeriesCollection scatterDataSet = new TimeSeriesCollection();
+        scatterDataSet.addSeries(scatterSeriesDatasets.get(0));
+        scatterDataSet.addSeries(scatterSeriesDatasets.get(1));
+
+        TimeSeriesCollection timeSeriesDataset = new TimeSeriesCollection();
+        timeSeriesDataset.addSeries(timeSeriesDatasets.get(0));
+        timeSeriesDataset.addSeries(timeSeriesDatasets.get(1));
+       // timeSeriesDataset.addSeries(timeSeriesDatasets.get(2));
+
+
+        Analysis strategyOne = new Analysis(analysisNames,root,timeSeriesDatasets,scatterSeriesDatasets,barSeriesDataSets,XYSeriesSets);
+        strategyOne.CreateLineChart(root,method,XYSeriesDataset);
+        strategyOne.createScatter(root,method,scatterDataSet);
+        strategyOne.createBar(root,method,barSeriesDataSets);
+        strategyOne.createTimeSeries(root,method,timeSeriesDataset);
     }
 
-    /***
+
+
+/*
+    *//***
      * creates a line chart for strategy 7
      * @param root the program ui
      * @param series the datasets
      * @param method the index of the method selected
-     */
+     *//*
     public void createLineChartS7(ProgramUI root, ArrayList<ParsedSeries> series, int method){
 
         String[] seriesName = new String[]{
@@ -89,7 +150,7 @@ public class StrategySeven {
         );
 
         // thank you kostas i copied this from you
-        /*XYPlot plot = chart.getXYPlot();
+        *//*XYPlot plot = chart.getXYPlot();
 
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
         renderer.setSeriesPaint(0, Color.RED);
@@ -116,7 +177,7 @@ public class StrategySeven {
 
         // to add to the program ui
         root.getCenter().add(chartPanel);
-        root.validate();*/
+        root.validate();*//*
 
         // from ammar's strategy 1 code
         ChartPanel chartPanel = new ChartPanel(chart){
@@ -137,12 +198,12 @@ public class StrategySeven {
 
     }
 
-    /***
+    *//***
      * creates a scatterchart for strategy 7
      * @param root the program ui
      * @param series the datasets
      * @param method the index of the method chosen
-     */
+     *//*
     public void createScatterS7(ProgramUI root, ArrayList<ParsedSeries> series, int method){
 
         String[] seriesName = new String[]{
@@ -206,12 +267,12 @@ public class StrategySeven {
 
     }
 
-    /***
+    *//***
      * creates a bar graph
      * @param root the program ui
      * @param series the datasets
      * @param method the index of the analysis chosen on the dropdown
-     */
+     *//*
     public void createBarS7(ProgramUI root, ArrayList<ParsedSeries> series, int method){
 
         String[] seriesName = new String[]{
@@ -273,7 +334,7 @@ public class StrategySeven {
         // to add to the program ui
         root.getCenter().add(chartPanel);
         root.validate();
-    }
+    }*/
 
     // pass a location as a parameter
 
@@ -328,8 +389,6 @@ public class StrategySeven {
 
         root.getCenter().add(outputScrollPane);
         root.validate();
-
-
 
 
 
