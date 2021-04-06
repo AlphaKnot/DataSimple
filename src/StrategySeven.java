@@ -27,24 +27,44 @@ import java.util.ArrayList;
 import java.util.concurrent.Flow;
 
 public class StrategySeven {
-    public StrategySeven(ProgramUI root, ArrayList<ParsedSeries> series, int method){
 
+    // represents the dropdown of analyses
+    String[] analysisNames;
+
+    // the constructor
+    public StrategySeven(ProgramUI root, ArrayList<ParsedSeries> series, int method){
         createLineChartS7(root, series, method);
+        createScatterS7(root,series,method);
+        createBarS7(root,series,method);
 
     }
 
+    /***
+     * creates a line chart for strategy 7
+     * @param root the program ui
+     * @param series the datasets
+     * @param method the index of the method selected
+     */
     public void createLineChartS7(ProgramUI root, ArrayList<ParsedSeries> series, int method){
+
+        String[] seriesName = new String[]{
+                "Current Health Expenditure per capita",
+                "Infant Mortality Rate (per 1000 live births)",
+
+        };
+
+        analysisNames = root.getAnalysisLabels();
 
         // creating an array list of XYSeries datasets
         ArrayList<XYSeries> datasets = new ArrayList<>();
 
         // looping through the values
-        for (ParsedSeries parsedSeries : series) {
-            XYSeries xyseries = new XYSeries(parsedSeries.seriesIndicator);
+        for (int i = 0; i<series.size(); i++) {
+            XYSeries xyseries = new XYSeries(seriesName[i]);
 
-            for (int j = 0; j < parsedSeries.getValues().size(); j++) {
+            for (int j = 0; j < series.get(i).getValues().size(); j++) {
                 // Getting year will need to be managed for the series some how
-                xyseries.add(parsedSeries.xDelimitation.get(j), parsedSeries.getValues().get(j));
+                xyseries.add(series.get(i).xDelimitation.get(j), series.get(i).getValues().get(j));
             }
             datasets.add(xyseries);
         }
@@ -57,7 +77,7 @@ public class StrategySeven {
 
         // creates a line chart
         JFreeChart chart = ChartFactory.createXYLineChart(
-                "Infant Mortality vs Health Expenditure", // Title
+                analysisNames[method], // Title
                 "Year", // x-axis Label
                 "", // y-axis Label
                 lineDataSet, // Dataset
@@ -66,7 +86,9 @@ public class StrategySeven {
                 true, // Use tooltips
                 false // Configure chart to generate URLs?
         );
-        XYPlot plot = chart.getXYPlot();
+
+        // thank you kostas i copied this from you
+        /*XYPlot plot = chart.getXYPlot();
 
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
         renderer.setSeriesPaint(0, Color.RED);
@@ -93,17 +115,49 @@ public class StrategySeven {
 
         // to add to the program ui
         root.getCenter().add(chartPanel);
+        root.validate();*/
+
+        // from ammar's strategy 1 code
+        ChartPanel chartPanel = new ChartPanel(chart){
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(600, 400);
+            }
+
+
+        };
+        //System.out.println("------ Outputting Graph -------");
+        root.getCenter().setLayout(new FlowLayout(FlowLayout.LEFT));
+        chartPanel.setBackground(Color.white);
+        chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
+        root.getCenter().add(chartPanel);
         root.validate();
 
     }
 
+    /***
+     * creates a scatterchart for strategy 7
+     * @param root the program ui
+     * @param series the datasets
+     * @param method the index of the method chosen
+     */
     public void createScatterS7(ProgramUI root, ArrayList<ParsedSeries> series, int method){
+
+        String[] seriesName = new String[]{
+                "Current Health Expenditure per capita",
+                "Infant Mortality Rate (per 1000 live births)",
+
+        };
+
+        analysisNames = root.getAnalysisLabels();
+
         // creating an array list of TimeSeries datasets
         ArrayList<TimeSeries> datasets = new ArrayList<>();
 
         // looping through the values
         for (int i = 0; i <series.size();i++) {
-            TimeSeries scatterseries = new TimeSeries(series.get(i).seriesIndicator);
+            TimeSeries scatterseries = new TimeSeries(seriesName[i]);
 
             for (int j = 0; j < series.get(i).getValues().size(); j++) {
 
@@ -122,6 +176,8 @@ public class StrategySeven {
         XYItemRenderer itemrenderer1 = new XYLineAndShapeRenderer(false, true);
         //XYItemRenderer itemrenderer2 = new XYLineAndShapeRenderer(false, true);
 
+
+        // lmao idk if this part even works
         plot.setDataset(0, scatterDataSet);
         plot.setRenderer(0, itemrenderer1);
         DateAxis domainAxis = new DateAxis("Year");
@@ -149,7 +205,20 @@ public class StrategySeven {
 
     }
 
+    /***
+     * creates a bar graph
+     * @param root the program ui
+     * @param series the datasets
+     * @param method the index of the analysis chosen on the dropdown
+     */
     public void createBarS7(ProgramUI root, ArrayList<ParsedSeries> series, int method){
+
+        String[] seriesName = new String[]{
+                "Current Health Expenditure per capita",
+                "Infant Mortality Rate (per 1000 live births)",
+
+        };
+
         // creating an array list of DefaultCategory datasets
         ArrayList<DefaultCategoryDataset> datasets = new ArrayList<>();
 
@@ -159,15 +228,15 @@ public class StrategySeven {
 
             for (int j = 0; j < series.get(i).getValues().size(); j++) {
 
-                barseries.setValue(series.get(i).getValues().get(j),series.get(i).getSeriesIndicator(), series.get(i).xDelimitation.get(j));
+                barseries.setValue(series.get(i).getValues().get(j),seriesName[i], series.get(i).xDelimitation.get(j));
                 //setValue(value, indicator, year)
                 //add xy (year, value)
                 // YEAR    VALUE
                 //series.get(i).xDelimitation.get(j),series.get(i).getValues().get(j)
                 // VALUE   YEAR
                 // series.get(i).getValues().get(j), indicator, series.get(i).xDelimitation.get(j)
-
             }
+
             datasets.add(barseries);
         }
 
@@ -194,7 +263,7 @@ public class StrategySeven {
 
 
         ChartPanel chartPanel = new ChartPanel(barChart);
-        chartPanel.setPreferredSize(new Dimension(400, 300));
+        chartPanel.setPreferredSize(new Dimension(600, 400));
         chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         chartPanel.setBackground(Color.white);
 
@@ -204,17 +273,28 @@ public class StrategySeven {
     }
 
     // pass a location as a parameter
+
+    /***
+     * creates a report
+     * @param root the program ui
+     * @param series the datasets
+     * @param method the index of the analysis chosen on the dropdown menu
+     */
     public void createReport(ProgramUI root, ArrayList<ParsedSeries> series, int method){
         JTextArea report = new JTextArea();
         report.setEditable(false);
         report.setPreferredSize(new Dimension(400, 300));
         report.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         report.setBackground(Color.white);
-        String reportMessage;
-        String title;
-        String yeartoString;
-        float infantMort;
-        int year;
+
+
+
+
+        String[] seriesName = new String[]{
+                "Current Health Expenditure per capita",
+                "Infant Mortality Rate (per 1000 live births)",
+
+        };
 
      /*   reportMessage = "Mortality vs Expenses & Hospital Beds\n" + "==============================\n" + "Year 2018:\n"
                 + "\tMortality/1000 births => 5.6\n" + "\tHealth Expenditure per Capita => 10624\n"
@@ -223,33 +303,28 @@ public class StrategySeven {
                 + "Year 2016:\n" + "\tMortality/1000 births => 5.8\n" + "\tHealth Expenditure per Capita => 9877\n"
                 + "\tHospital Beds/1000 people => 2.77\n";*/
 
-/*        for (int i = 0; i <series.size();i++) {
-            TimeSeries scatterseries = new TimeSeries(series.get(i).seriesIndicator);
-
-            for (int j = 0; j < series.get(i).getValues().size(); j++) {
-
-                scatterseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
-
-            }
-            datasets.add(scatterseries);
-        }*/
+        ArrayList<String> reportMessages = new ArrayList<>();
+        String message = "";
+        String title;
+        String finalMessage="";
 
         title = "Infant Mortality vs Health Expenditure\n" + "=============================\n";
         for (int i = 0; i < series.size(); i++){
             for (int j = 0; j <series.get(i).getValues().size(); j++){
-                year = series.get(i).xDelimitation.get(j);
-                infantMort = series.get(i).getValues().get(j);
-
-                // here jen
-                String yearString = String.valueOf(year);
-
-
+                message = seriesName[i] +" had a value in:" + series.get(i).xDelimitation.get(j) + "of : "+ series.get(i).getValues().get(j)+"\n";
             }
-
-
+            reportMessages.add(message);
         }
-        
-        
+        finalMessage = title + reportMessages;
+        report.setText(finalMessage);
+
+        JScrollPane outputScrollPane = new JScrollPane(report);
+        //west.add(outputScrollPane);
+
+        root.getCenter().add(outputScrollPane);
+        root.validate();
+
+
 
 
 
