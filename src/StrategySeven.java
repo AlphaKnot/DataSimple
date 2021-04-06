@@ -30,91 +30,69 @@ public class StrategySeven {
 
     // represents the dropdown of analyses
     String[] analysisNames;
-
     String[] seriesName;
     ProgramUI root;
-    ArrayList<TimeSeries> timeSeriesDatasets;
-    ArrayList<TimeSeries> scatterSeriesDatasets;
+    ArrayList<TimeSeries> timeSeriesDataSets;
+    ArrayList<TimeSeries> scatterSeriesDataSets;
     ArrayList<DefaultCategoryDataset> barSeriesDataSets;
     ArrayList<XYSeries> XYSeriesSets;
+    ArrayList<String> reportMessages;
 
     // the constructor
     public StrategySeven(ProgramUI root, ArrayList<ParsedSeries> series, int method){
-    /*    createLineChartS7(root, series, method);
-        createScatterS7(root,series,method);
-        createBarS7(root,series,method);
-        createReportS7(root,series,method);*/
 
-        String[] seriesName = new String[]{
-                "Current Health Expenditure per capita",
-                "Infant Mortality Rate (per 1000 live births)",
+        seriesName = new String[] {
+          "Current Health Expenditure per capita",
+          "Infant Mortality Rate (per 1000 live births)"
         };
-
         this.root = root;
         analysisNames = root.getAnalysisLabels();
-
-        timeSeriesDatasets = new ArrayList<>();
+        timeSeriesDataSets = new ArrayList<>();
         barSeriesDataSets = new ArrayList<>();
         XYSeriesSets = new ArrayList<>();
-        scatterSeriesDatasets = new ArrayList<>();
+        scatterSeriesDataSets = new ArrayList<>();
+        reportMessages = new ArrayList<>();
 
-        // this part is setting up the report-jen
-        ArrayList<String> reportMessages = new ArrayList<>();
+
         String message = "";
-        String title;
-        String finalMessage;
+        String title = seriesName[0] +" vs "+seriesName[1];
+        String finalMessage ="";
 
-
-
-        for (int i = 0; i <= series.size(); i++) {
+        for (int i = 0; i<series.size(); i++) {
             XYSeries xyseries = new XYSeries(seriesName[i]);
             TimeSeries scatterseries = new TimeSeries(seriesName[i]);
-            TimeSeries timeseries = new TimeSeries(seriesName[i]);
             DefaultCategoryDataset barseries = new DefaultCategoryDataset();
+
             for (int j = 0; j < series.get(i).getValues().size(); j++) {
-                xyseries.add(series.get(i).xDelimitation.get(j),series.get(i).getValues().get(j));
+                // Getting year will need to be managed for the series some how
+                xyseries.add(series.get(i).xDelimitation.get(j), series.get(i).getValues().get(j));
                 scatterseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
+                message = seriesName[i] +" had a value in:" + series.get(i).xDelimitation.get(j) + "of : "+ series.get(i).getValues().get(j)+"\n";
                 barseries.setValue(series.get(i).getValues().get(j),seriesName[i], series.get(i).xDelimitation.get(j));
-                timeseries.add(new Year(series.get(i).xDelimitation.get(j)), series.get(i).getValues().get(j));
-
-
-                // the report message to the added to the array-jen
-                message = seriesName[i] + " had a value in:" + series.get(i).xDelimitation.get(j) + "of : " + series.get(i).getValues().get(j) + "\n";
             }
             XYSeriesSets.add(xyseries);
-            timeSeriesDatasets.add(scatterseries);
-            barSeriesDataSets.add(barseries);
-            scatterSeriesDatasets.add(scatterseries);
-
-            // adding the message to the array-jen
+            timeSeriesDataSets.add(scatterseries);
             reportMessages.add(message);
+            barSeriesDataSets.add(barseries);
 
         }
-        XYSeriesCollection XYSeriesDataset = new XYSeriesCollection();
-        XYSeriesDataset.addSeries(XYSeriesSets.get(0));
-        XYSeriesDataset.addSeries(XYSeriesSets.get(1));
-        //XYSeriesDataset.addSeries(XYSeriesSets.get(2));
+
+        finalMessage = title + reportMessages;
+
+        XYSeriesCollection lineDataSet = new XYSeriesCollection();
+        lineDataSet.addSeries(XYSeriesSets.get(0));
+        lineDataSet.addSeries(XYSeriesSets.get(1));
 
         TimeSeriesCollection scatterDataSet = new TimeSeriesCollection();
-        scatterDataSet.addSeries(scatterSeriesDatasets.get(0));
-        scatterDataSet.addSeries(scatterSeriesDatasets.get(1));
+        scatterDataSet.addSeries(timeSeriesDataSets.get(0));
+        scatterDataSet.addSeries(timeSeriesDataSets.get(1));
 
-        TimeSeriesCollection timeSeriesDataset = new TimeSeriesCollection();
-        timeSeriesDataset.addSeries(timeSeriesDatasets.get(0));
-        timeSeriesDataset.addSeries(timeSeriesDatasets.get(1));
-       // timeSeriesDataset.addSeries(timeSeriesDatasets.get(2));
-        
-        
+        Analysis strategySeven = new Analysis(analysisNames,root,timeSeriesDataSets,scatterSeriesDataSets,barSeriesDataSets,XYSeriesSets);
+        strategySeven.CreateLineChart(root,method,lineDataSet,"Years","$US",600,400);
+        strategySeven.createScatter(root,method,scatterDataSet,"Year","$US",400,300);
+        strategySeven.createBar(root,method,barSeriesDataSets,"Years","$US",600,400);
+        strategySeven.createReport(root,finalMessage,400,300);
 
-
-        Analysis strategySeven = new Analysis(analysisNames,root,timeSeriesDatasets,scatterSeriesDatasets,barSeriesDataSets,XYSeriesSets);
-        strategySeven.CreateLineChart(root,method,XYSeriesDataset);
-        strategySeven.createScatter(root,method,scatterDataSet);
-        strategySeven.createBar(root,method,barSeriesDataSets);
-        strategySeven.createTimeSeries(root,method,timeSeriesDataset);
-        
-        // creating the report
-        strategySeven.createReport(root, method,reportMessages);
     }
-    
+
 }

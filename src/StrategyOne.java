@@ -63,9 +63,9 @@ public class StrategyOne{
 
 
         Analysis strategyOne = new Analysis(analysisNames,root,timeSeriesDatasets,scatterSeriesDatasets,barSeriesDataSets,XYSeriesSets);
-        strategyOne.CreateLineChart(root,method,XYSeriesDataset);
-        strategyOne.createScatter(root,method,scatterDataSet);
-        strategyOne.createBar(root,method,barSeriesDataSets);
-        strategyOne.createTimeSeries(root,method,timeSeriesDataset);
+        strategyOne.CreateLineChart(root,method,XYSeriesDataset,"Years","$US",600,400);
+        strategyOne.createScatter(root,method,scatterDataSet,"Years","$US",600,400);
+        strategyOne.createBar(root,method,barSeriesDataSets,"Years","$US",600,400);
+        strategyOne.createTimeSeries(root,method,timeSeriesDataset,"Years","$US",600,400);
     }
 }
