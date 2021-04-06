@@ -41,21 +41,24 @@ public class DataProcessor {
 
                 break;
             case 1:
-                // Same here
+                //11
                 break;
+            case 2:
+                StrategyThree strategyThree = new StrategyThree(root, series, method);
             case 3:
-                // Here
+                StrategyFour strategyFour = new StrategyFour(root, series, method);
                 break;
             case 4:
-                // No
+                StrategyFive strategyFive = new StrategyFive(root,series,method);
                 break;
             case 5:
-                //No  ,
+                //No
                 break;
             case 6:
-                //Noa
+                StrategySeven strategySeven = new StrategySeven(root,series,method);
                 break;
             case 7:
+                StrategyEight strategyEight = new StrategyEight(root, series, method);
                 break;
             default:
                 System.out.println("Mistake code -- 3312");
