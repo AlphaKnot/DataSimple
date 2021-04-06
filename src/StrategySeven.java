@@ -240,11 +240,17 @@ public class StrategySeven {
                 year = series.get(i).xDelimitation.get(j);
                 infantMort = series.get(i).getValues().get(j);
 
+                // here jen
+                String yearString = String.valueOf(year);
+
 
             }
 
 
         }
+        
+        
+
 
 
     }
