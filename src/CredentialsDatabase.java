@@ -4,7 +4,7 @@ import java.util.*;
 
 /***
  * this class implements the database of the login system using a hash table
- * @author Jenessa Lu
+ * @author Jenessa Lu, Amaar Hussein
  */
 public class CredentialsDatabase{
     Hashtable database = new Hashtable<>();
