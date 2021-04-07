@@ -1,9 +1,7 @@
-import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.Year;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
+
 import java.util.ArrayList;
 
 
@@ -11,10 +9,6 @@ public class StrategyOne{
     String[] analysisNames ;
     String[] seriesName;
     ProgramUI root;
-    ArrayList<TimeSeries> timeSeriesDatasets;
-    ArrayList<TimeSeries> scatterSeriesDatasets;
-    ArrayList<DefaultCategoryDataset> barSeriesDataSets;
-    ArrayList<XYSeries> XYSeriesSets;
     public StrategyOne(ProgramUI root, ArrayList<ParsedSeries> series, int method){
         seriesName = new String[]{
                 "CO2 emissions (metric tons per capita)",
@@ -23,49 +17,55 @@ public class StrategyOne{
 
         };
         this.root = root;
+
         analysisNames = root.getAnalysisLabels();
-        timeSeriesDatasets = new ArrayList<>();
-        barSeriesDataSets = new ArrayList<>();
-        XYSeriesSets = new ArrayList<>();
-        scatterSeriesDatasets = new ArrayList<>();
+
+        ArrayList<TimeSeriesCollection> timeSeriesList = new ArrayList<>();
+        ArrayList<TimeSeriesCollection> scatterSeriesList = new ArrayList<>();
+        ArrayList<TimeSeriesCollection> xySeriesList = new ArrayList<>();
+        ArrayList<TimeSeriesCollection> barSeriesList = new ArrayList<>();
+
+
 
 
         for (int i = 0; i < series.size(); i++) {
-            XYSeries xyseries = new XYSeries(seriesName[i]);
+
+            TimeSeriesCollection timeSeriesCollection = new TimeSeriesCollection();
+            TimeSeriesCollection scatterSeriesCollection = new TimeSeriesCollection();
+            TimeSeriesCollection xySeriesCollection = new TimeSeriesCollection();
+            TimeSeriesCollection barSeriesCollection = new TimeSeriesCollection();
+
+            TimeSeries xyseries = new TimeSeries(seriesName[i]);
             TimeSeries scatterseries = new TimeSeries(seriesName[i]);
             TimeSeries timeseries = new TimeSeries(seriesName[i]);
-            DefaultCategoryDataset barseries = new DefaultCategoryDataset();
+            TimeSeries barseries = new TimeSeries(seriesName[i]);
+
+
             for (int j = 0; j < series.get(i).getValues().size(); j++) {
-                xyseries.add(series.get(i).xDelimitation.get(j),series.get(i).getValues().get(j));
+                xyseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                 scatterseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
-                barseries.setValue(series.get(i).getValues().get(j),seriesName[i], series.get(i).xDelimitation.get(j));
+                barseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                 timeseries.add(new Year(series.get(i).xDelimitation.get(j)), series.get(i).getValues().get(j));
             }
-            XYSeriesSets.add(xyseries);
-            timeSeriesDatasets.add(scatterseries);
-            barSeriesDataSets.add(barseries);
-            scatterSeriesDatasets.add(scatterseries);
+
+            xySeriesCollection.addSeries(xyseries);
+            scatterSeriesCollection.addSeries(scatterseries);
+            timeSeriesCollection.addSeries(timeseries);
+            barSeriesCollection.addSeries(barseries);
+
+            xySeriesList.add(xySeriesCollection);
+            scatterSeriesList.add(scatterSeriesCollection);
+            timeSeriesList.add(timeSeriesCollection);
+            barSeriesList.add(barSeriesCollection);
+
+
 
         }
-        XYSeriesCollection XYSeriesDataset = new XYSeriesCollection();
-        XYSeriesDataset.addSeries(XYSeriesSets.get(0));
-        XYSeriesDataset.addSeries(XYSeriesSets.get(1));
-        XYSeriesDataset.addSeries(XYSeriesSets.get(2));
 
-        TimeSeriesCollection scatterDataSet = new TimeSeriesCollection();
-        scatterDataSet.addSeries(scatterSeriesDatasets.get(0));
-        scatterDataSet.addSeries(scatterSeriesDatasets.get(1));
-
-        TimeSeriesCollection timeSeriesDataset = new TimeSeriesCollection();
-        timeSeriesDataset.addSeries(timeSeriesDatasets.get(0));
-        timeSeriesDataset.addSeries(timeSeriesDatasets.get(1));
-        timeSeriesDataset.addSeries(timeSeriesDatasets.get(2));
-
-
-        Analysis strategyOne = new Analysis(analysisNames,root,timeSeriesDatasets,scatterSeriesDatasets,barSeriesDataSets,XYSeriesSets);
-        strategyOne.CreateLineChart(root,method,XYSeriesDataset,seriesName);
-        strategyOne.createScatter(root,method,scatterDataSet,seriesName);
-        strategyOne.createBar(root,method,barSeriesDataSets,seriesName);
-        strategyOne.createTimeSeries(root,method,timeSeriesDataset,seriesName);
+        Analysis strategyOne = new Analysis(analysisNames,root,timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
+        strategyOne.CreateLineChart(method,seriesName);
+        strategyOne.createScatter(method,seriesName);
+        strategyOne.createBar(method,seriesName);
+        strategyOne.createTimeSeries(method,seriesName);
     }
 }
