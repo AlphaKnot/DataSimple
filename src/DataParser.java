@@ -20,13 +20,13 @@ import javax.swing.*;
  * Particular query, note that these must be stored somewhere for possible future use but this may impede memory -- it should however be noted that indicators will
  * be required for proper usage of this class, and its advised that we store
  *
- * ~ AmmarH
+ * @author Ammar Hussein
  */
 
 public class DataParser {
     // Repurposed as a constructor, take in the following parameters,
     /*
-    Indicator -- String // TODO: Figure out how we'll get the indicators
+    Indicator -- String
     year start
     year end
      */
@@ -208,6 +208,10 @@ public class DataParser {
         return indicator;
     }
 
+    /***
+    * gets the series
+    * @return an array of the parsed series
+    */
     public ArrayList<ParsedSeries> getSeries() {
         return series;
     }
