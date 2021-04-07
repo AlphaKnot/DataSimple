@@ -13,6 +13,8 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 public class ProgramUI extends JFrame{
 
+    public boolean minusButtonClicked=false;
+    public Boolean plusButtonClicked=false;
     /**
      * Initalize UI components with class attributes to be manipulated later.
      *
@@ -23,10 +25,10 @@ public class ProgramUI extends JFrame{
     private JComboBox yearEndDropDown;
     private JPanel rootPanel;
     private JButton remove_view;
-    private JButton add_view;
+    public JButton add_view;
     private JComboBox analysisDropDown;
     private JButton recalculate_button;
-    private JComboBox viewDropdown;
+    public JComboBox viewDropdown;
     private JPanel center;
     private JPanel north;
     private JPanel south;
@@ -74,10 +76,15 @@ public class ProgramUI extends JFrame{
         //analysisDropDown.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         countDB = new CountryDatabase("country_list");
         //setting sizes for comboboxes
+        add_view.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(rootPanel,"Please Analyze a country before adding a viewer!");
+            }
+        });
         countryDropdown.addActionListener(new countryDropdownClicked(this, countryDropdown, yearStartDropdown, yearEndDropDown,countDB));
         recalculate_button.addActionListener(new recalculateButtonClicked(this,countryDropdown,yearStartDropdown,yearEndDropDown,analysisDropDown,countDB));
-        add_view.addActionListener(new addViewOnClick());
-        remove_view.addActionListener(new removeViewOnClick());
+        remove_view.addActionListener(new removeViewOnClick(this));
         // TODO : Add graphs , add hover listener event to them
 
     }
@@ -205,22 +212,17 @@ public class ProgramUI extends JFrame{
 
         }
     }
-    // Action listener , for when the addView button is clicked ( + / plus button )
-    static class addViewOnClick implements ActionListener{
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            // This call to method will call the necessary action to calculate the graph required, possibly use jenessa's code? ~ marz
-            System.out.println("Add mode on");
-
-        }
-    }
 // Action listener , for when the removeView button is clicked ( - / minus button )
     static class removeViewOnClick implements ActionListener{
-
+        ProgramUI root;
+        public removeViewOnClick(ProgramUI root){
+            this.root = root;
+        }
         @Override
         public void actionPerformed(ActionEvent e) {
             // This call to method will call the necessary action to calculate the graph required, possibly use jenessa's code? ~ marz
+            root.minusButtonClicked = true;
             System.out.println("Remove mode on");
 
         }

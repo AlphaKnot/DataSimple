@@ -1,6 +1,9 @@
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.Year;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -8,20 +11,22 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Vector;
 
-
-public class StrategyOne{
-    Vector<String> viewDropdownList;
-    String[] analysisNames ;
+public class StrategyTwo {
+    Analysis strategyTwo;
+    String[] analysisNames;
     String[] seriesName;
     ProgramUI root;
+    ArrayList<TimeSeries> timeSeriesDatasets;
+    ArrayList<TimeSeries> scatterSeriesDatasets;
+    DefaultCategoryDataset barSeries;
+    ArrayList<XYSeries> XYSeriesSets;
+    Vector<String> viewDropdownList;
     Boolean[] GraphAlreadySet;
-    Analysis strategyOne;
-    public StrategyOne(ProgramUI root, ArrayList<ParsedSeries> series, int method){
-        seriesName = new String[]{
-                "(metric tons per capita)",
-                "(kg of oil equivalent per capita)",
-                "(micrograms per cubic meter)",
+    public StrategyTwo(ProgramUI root, ArrayList<ParsedSeries> series, int method){
 
+        seriesName = new String[]{
+                "(micrograms per cubic meter)",
+                "(% of land area)",
         };
         this.root = root;
 
@@ -82,12 +87,12 @@ public class StrategyOne{
             root.viewDropdown.addItem(viewDropdownList.get(i));
             GraphAlreadySet[i] = false;
         }
-        strategyOne = new Analysis(analysisNames,root,timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
-        strategyOne.CreateLineChart(method,seriesName);
+        strategyTwo = new Analysis(analysisNames,root,timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
+        strategyTwo.CreateLineChart(method,seriesName);
         // Update the "GraphAlreadySet Variable"
-        strategyOne.createScatter(method,seriesName);
-        strategyOne.createBar(method,seriesName);
-        strategyOne.createTimeSeries(method,seriesName);
+        strategyTwo.createScatter(method,seriesName);
+        strategyTwo.createBar(method,seriesName);
+        strategyTwo.createTimeSeries(method,seriesName);
         GraphAlreadySet[0] = true;
         GraphAlreadySet[1] = true;
         GraphAlreadySet[2] = true;
@@ -102,19 +107,19 @@ public class StrategyOne{
                 }
                 else{
                     if(root.viewDropdown.getSelectedItem().equals(viewDropdownList.get(0)) && !GraphAlreadySet[0]){
-                        strategyOne.CreateLineChart(method,seriesName);
+                        strategyTwo.CreateLineChart(method,seriesName);
                     }
                     else if(root.viewDropdown.getSelectedItem().equals(viewDropdownList.get(1)) && !GraphAlreadySet[1]){
-                        strategyOne.createScatter(method,seriesName);
+                        strategyTwo.createScatter(method,seriesName);
                     }
                     else if(root.viewDropdown.getSelectedItem().equals(viewDropdownList.get(2)) && !GraphAlreadySet[2]){
-                        strategyOne.createBar(method,seriesName);
+                        strategyTwo.createBar(method,seriesName);
                     }
                     else if(root.viewDropdown.getSelectedItem().equals(viewDropdownList.get(3)) && !GraphAlreadySet[3]){
-                        strategyOne.createTimeSeries(method,seriesName);
+                        strategyTwo.createTimeSeries(method,seriesName);
                     }
                     else if(root.viewDropdown.getSelectedItem().equals(viewDropdownList.get(4)) && !GraphAlreadySet[4]){
-                        strategyOne.createReport("poop");
+                        strategyTwo.createReport("poop");
                     }
                     else{
                         JOptionPane.showMessageDialog(root,"Graph already displayed!");
@@ -125,12 +130,5 @@ public class StrategyOne{
         });
     }
 
-    public Analysis getAnalysis() {
-        return strategyOne;
     }
 
-    public Boolean[] getGraphAlreadySet() {
-        return GraphAlreadySet;
-    }
-
-}

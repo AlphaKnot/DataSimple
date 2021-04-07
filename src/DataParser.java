@@ -13,6 +13,8 @@ import com.google.gson.JsonArray;
 
 import com.google.gson.JsonParser;
 
+import javax.swing.*;
+
 /***
  * This class should be constantly reinitalized through use of the *new* keyword (ie regularly create these class) to retrieve parsed data for any
  * Particular query, note that these must be stored somewhere for possible future use but this may impede memory -- it should however be noted that indicators will
@@ -99,7 +101,7 @@ public class DataParser {
                     JsonArray jsonArray = new JsonParser().parse(inline).getAsJsonArray();
 
                     int size = jsonArray.size();
-                    if (size > 1) {
+                    if (size > 1 && !jsonArray.isJsonNull()) {
                         int sizeOfResults = jsonArray.get(1).getAsJsonArray().size();
 
                         int year = 0;
@@ -142,7 +144,9 @@ public class DataParser {
                         cum_value = cumulativeValue;
                         cum_avg = cum_value / sizeOfResults;
 
-                    } else {//Popup window, tell user to try again}
+                    } else {
+
+                        JOptionPane.showMessageDialog(new JFrame(),"The country you are trying to analyze is not available");
                     }
 
 
@@ -155,7 +159,6 @@ public class DataParser {
 
 
             } catch (IOException e) {
-
                 e.printStackTrace();
 
             }

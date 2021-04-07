@@ -5,11 +5,19 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class DataProcessor {
+
     // Step one parse data.
     // Step two create a country object
     // Step three get that country object here
     // Step four get that result object back to program UI
     ProgramUI root;
+    StrategyOne st1;
+    StrategyThree strategyThree;
+    StrategyFour strategyFour;
+    StrategyFive strategyFive;
+    StrategySeven strategySeven;
+    StrategyEight strategyEight;
+    StrategyTwo strategyTwo;
     ArrayList<ParsedSeries> series;
     int method; // This will be the method by which we process. is it a piechart, a barchart? etc.
     Country country; // Country is at this point should be complete for what analysis it will be doing
@@ -36,35 +44,35 @@ public class DataProcessor {
         switch(method){
             case 0:
 
-                    StrategyOne st1 = new StrategyOne(root, series, method);
+                     st1 = new StrategyOne(root, series, method);
 
 
                 break;
             case 1:
-                //11
+                strategyTwo = new StrategyTwo(root,series,method);
                 break;
             case 2:
-                StrategyThree strategyThree = new StrategyThree(root, series, method);
+                 strategyThree = new StrategyThree(root, series, method);
             case 3:
-                StrategyFour strategyFour = new StrategyFour(root, series, method);
+                 strategyFour = new StrategyFour(root, series, method);
                 break;
             case 4:
-                StrategyFive strategyFive = new StrategyFive(root,series,method);
+                 strategyFive = new StrategyFive(root,series,method);
                 break;
             case 5:
                 //No
                 break;
             case 6:
-                StrategySeven strategySeven = new StrategySeven(root,series,method);
+                 strategySeven = new StrategySeven(root,series,method);
                 break;
             case 7:
-                StrategyEight strategyEight = new StrategyEight(root, series, method);
+                 strategyEight = new StrategyEight(root, series, method);
                 break;
             default:
-                System.out.println("Mistake code -- 3312");
-
+                JOptionPane.showMessageDialog(root, "Analysis method not valid, please select another");
         }
         }catch(Exception e){
+            e.printStackTrace();
             JOptionPane.showMessageDialog(root, "Country has no usable data, please select another country or another analysis");
         }
 
