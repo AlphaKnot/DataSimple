@@ -83,7 +83,7 @@ public class ProgramUI extends JFrame{
             }
         });
         countryDropdown.addActionListener(new countryDropdownClicked(this, countryDropdown, yearStartDropdown, yearEndDropDown,countDB));
-        recalculate_button.addActionListener(new recalculateButtonClicked(this,countryDropdown,yearStartDropdown,yearEndDropDown,analysisDropDown,countDB));
+        recalculate_button.addActionListener(new recalculateButtonClicked(this,countryDropdown,yearStartDropdown,yearEndDropDown,analysisDropDown,countDB,viewDropdown));
         remove_view.addActionListener(new removeViewOnClick(this));
         // TODO : Add graphs , add hover listener event to them
 
@@ -173,15 +173,17 @@ public class ProgramUI extends JFrame{
         JComboBox yearStartDropdown;
         JComboBox yearEndDropdown;
         JComboBox analysisDropdown;
+        JComboBox viewDropdown;
         CountryDatabase cd;
         ProgramUI main;
-    public recalculateButtonClicked(ProgramUI main, JComboBox countryDropdown, JComboBox yearStartDropdown, JComboBox yearEndDropdown, JComboBox analysisDropdown,CountryDatabase cd) {
+    public recalculateButtonClicked(ProgramUI main, JComboBox countryDropdown, JComboBox yearStartDropdown, JComboBox yearEndDropdown, JComboBox analysisDropdown,CountryDatabase cd, JComboBox viewDropdown) {
         this.countryDropdown = countryDropdown;
         this.yearStartDropdown = yearStartDropdown;
         this.yearEndDropdown = yearEndDropdown;
         this.analysisDropdown = analysisDropdown;
         this.cd = cd;
         this.main = main;
+        this.viewDropdown = viewDropdown;
         // Required , year end year start, Country name for query
         // Country code for parsing
         // Create -> JFreeChart Object.
@@ -190,6 +192,9 @@ public class ProgramUI extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
             main.center.removeAll();
+            main.refreshCenter();
+            main.revalidate();
+            viewDropdown.removeAllItems();
             // This call to method will call the necessary action to calculate the graph required, possibly use jenessa's code? ~ marz
 
             System.out.println("Recalculating!");
