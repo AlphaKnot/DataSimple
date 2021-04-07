@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class StrategyThree {
     String[] analysisNames;
-    String seriesName;
+    String[] seriesNames;
     ProgramUI root;
     ArrayList<TimeSeries> timeSeriesDatasets;
     ArrayList<TimeSeries> scatterSeriesDatasets;
@@ -17,7 +17,7 @@ public class StrategyThree {
 
     public StrategyThree(ProgramUI root, ArrayList<ParsedSeries> series, int method) {
 
-        seriesName = "Ratio of CO2 emissions and GDP per capita";
+        seriesNames = new String[]{"CO2","GDP"};
 
         this.root = root;
         analysisNames = root.getAnalysisLabels();
@@ -25,9 +25,9 @@ public class StrategyThree {
         barSeriesDataSets = new ArrayList<>();
         XYSeriesSets = new ArrayList<>();
         scatterSeriesDatasets = new ArrayList<>();
-        XYSeries xyseries = new XYSeries(seriesName);
-        TimeSeries scatterseries = new TimeSeries(seriesName);
-        TimeSeries timeseries = new TimeSeries(seriesName);
+        XYSeries xyseries = new XYSeries(seriesNames[0]);
+        TimeSeries scatterseries = new TimeSeries(seriesNames[0]);
+        TimeSeries timeseries = new TimeSeries(seriesNames[0]);
         DefaultCategoryDataset barseries = new DefaultCategoryDataset();
         DefaultCategoryDataset piechart = new DefaultCategoryDataset();
 
@@ -40,7 +40,7 @@ public class StrategyThree {
                 xyseries.add(series.get(0).xDelimitation.get(i),(Number)val);
                 scatterseries.add(new Year(series.get(0).xDelimitation.get(i)),val);
                 timeseries.add(new Year(series.get(0).xDelimitation.get(i)),val);
-                barseries.setValue((Number)series.get(0).xDelimitation.get(i),seriesName,val);
+                barseries.setValue((Number)series.get(0).xDelimitation.get(i),0,val);
                 i++;
                 j++;
 
@@ -54,6 +54,7 @@ public class StrategyThree {
         XYSeriesSets.add(xyseries);
         scatterSeriesDatasets.add(scatterseries);
         timeSeriesDatasets.add(timeseries);
+        barSeriesDataSets.add(barseries);
 
 
         XYSeriesCollection XYSeriesDataset = new XYSeriesCollection();
@@ -68,10 +69,10 @@ public class StrategyThree {
 
 
         Analysis strategyThree = new Analysis(analysisNames,root,timeSeriesDatasets,scatterSeriesDatasets,barSeriesDataSets,XYSeriesSets);
-        strategyThree.CreateLineChart(root,method,XYSeriesDataset,"Years","CO2/GDP",600,400);
-        strategyThree.createScatter(root,method,scatterDataSet,"Years","CO2/GDP",600,400);
-        strategyThree.createTimeSeries(root,method,timeSeriesDataSet,"Years","CO2/GDP",600,400);
-
+        strategyThree.CreateLineChart(root,method,XYSeriesDataset,seriesNames);
+        strategyThree.createScatter(root,method,scatterDataSet,seriesNames);
+        strategyThree.createTimeSeries(root,method,timeSeriesDataSet,seriesNames);
+        strategyThree.createBar(root,method,barSeriesDataSets,seriesNames);
 
 
 

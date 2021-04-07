@@ -47,59 +47,40 @@ public class Analysis extends JFrame {
             this.XYSeriesSets = XYSeriesSets;
 
         }
-    // default width = 600, default height = 400, default xAxisLabel = "Years", yAxisLabel = "$US"
-        public void CreateLineChart(ProgramUI root, int method, XYSeriesCollection dataset, String yAxisLabel){
+        public void CreateLineChart(ProgramUI root, int method, XYSeriesCollection dataset, String[] seriesNames){
 
 
-            //JFreeChart chart =  ChartFactory.createXYLineChart(
-                    //analysisNames[method], // Title
-                    //"Years", // x-axis Label
-                    //yAxisLabel, // y-axis Label
-                    //dataset, // Dataset
-                    //PlotOrientation.VERTICAL, // Plot Orientation
-                    //true, // Show Legend
-                    //true, // Use tooltips
-                    //false // Configure chart to generate URLs?
-            //);
 
-            Args.nullNotPermitted(PlotOrientation.VERTICAL, "orientation");
-            NumberAxis xAxis = new NumberAxis("Years");
-            xAxis.setAutoRangeIncludesZero(false);
-            NumberAxis yAxis = new NumberAxis(yAxisLabel);
-            XYItemRenderer renderer = new XYLineAndShapeRenderer(true, false);
-            XYPlot plot = new XYPlot(dataset, xAxis, yAxis, renderer);
+            XYPlot plot = new XYPlot();
+            XYItemRenderer itemrenderer = new XYLineAndShapeRenderer(true, false);
+
             plot.setOrientation(PlotOrientation.VERTICAL);
-            renderer.setDefaultToolTipGenerator(new StandardXYToolTipGenerator());
+
+            itemrenderer.setDefaultToolTipGenerator(new StandardXYToolTipGenerator());
+
+
+            plot.setDataset(dataset);
+            plot.setRenderer(itemrenderer);
+            plot.mapDatasetToDomainAxis(0,0);
+
+            plot.setDomainAxis(new DateAxis("Years"));
+            plot.setRangeAxis(new NumberAxis(""));
+
+            for (int i = 0; i < seriesNames.length; i++) {
+                plot.mapDatasetToRangeAxis(i,i);
+                plot.setRangeAxis(i, new NumberAxis(seriesNames[i]));
+            }
 
             JFreeChart chart = new JFreeChart(analysisNames[method], JFreeChart.DEFAULT_TITLE_FONT, plot, true);
-
-
-            ChartPanel chartPanel = new ChartPanel(chart){
-                @Override
-                public Dimension getPreferredSize() {
-                    return new Dimension(600, 400);
-                }
-
-
-            };
-
-            System.out.println("------ Outputting Graph -------");
-            root.getCenter().setLayout(new FlowLayout(FlowLayout.LEFT));
-            chartPanel.setBackground(Color.white);
-            chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-            root.getCenter().add(chartPanel);
-            root.validate();
-            //root.getCenter().validate();
+            addToUI(root,chart);
 
 
         }
         public void creatPieChart(ProgramUI root, int method, DefaultCategoryDataset piechart){
 
         }
-    // default width = 600, default height = 400, default xAxisLabel = "Years", yAxisLabel = "$US"
-        public void createScatter(ProgramUI root, int method, TimeSeriesCollection scatterDataSet, String yAxisLabel) {
+        public void createScatter(ProgramUI root, int method, TimeSeriesCollection scatterDataSet, String[] seriesNames) {
 
-            // add the data to the chart
             XYPlot plot = new XYPlot();
             XYItemRenderer itemrenderer = new XYLineAndShapeRenderer(false, true);
 
@@ -109,33 +90,18 @@ public class Analysis extends JFrame {
             DateAxis domainAxis = new DateAxis("Years");
             plot.setDomainAxis(domainAxis);
             plot.setRangeAxis(new NumberAxis(""));
+            for (int i = 0; i < seriesNames.length; i++){
+                plot.setRangeAxis(i,new NumberAxis(seriesNames[i]));
+                plot.mapDatasetToRangeAxis(i,i);
+            }
 
-            plot.setRangeAxis(0, new NumberAxis(yAxisLabel));
-
-            plot.mapDatasetToRangeAxis(0, 0);// 1st dataset to 1st y-axis
-
-            plot.mapDatasetToRangeAxis(1, 1); // 2nd dataset to 2nd y-axis
-
-            JFreeChart scatterChart = new JFreeChart(
-                    analysisNames[method],
-                    new Font("Serif", Font.BOLD, 18),
-                    plot,
-                    true);
-
-            ChartPanel chartPanel = new ChartPanel(scatterChart);
-            chartPanel.setBackground(Color.white);
-            chartPanel.setPreferredSize(new Dimension(600, 400));
-            chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-
-            // to add to the program ui
-            root.getCenter().add(chartPanel);
-            root.validate();
+            JFreeChart scatterChart = new JFreeChart(analysisNames[method], new Font("Serif", Font.BOLD, 18), plot, true);
+            addToUI(root,scatterChart);
 
         }
-    // default width = 600, default height = 400, default xAxisLabel = "Years", yAxisLabel = "$US"
-        public void createBar(ProgramUI root,int method, ArrayList<DefaultCategoryDataset> datasets, String[] yAxisLabel){
+        public void createBar(ProgramUI root,int method, ArrayList<DefaultCategoryDataset> datasets, String[] seriesNames){
 
-            // add the data to the chart
+
             CategoryPlot plot = new CategoryPlot();
             CategoryAxis domainAxis = new CategoryAxis("Years");
             plot.setDomainAxis(0,domainAxis);
@@ -146,31 +112,13 @@ public class Analysis extends JFrame {
                 plot.mapDatasetToRangeAxis(i,i);
 
                 plot.setRangeAxis(new NumberAxis(""));
-                plot.setRangeAxis(i, new NumberAxis(yAxisLabel[i]));
+                plot.setRangeAxis(i, new NumberAxis(seriesNames[i]));
             }
+            JFreeChart barChart = new JFreeChart(analysisNames[method], new Font("Serif", Font.BOLD, 18), plot, true);
+            addToUI(root,barChart);
 
-
-
-
-            JFreeChart barChart = new JFreeChart(analysisNames[method],
-                    new Font("Serif", Font.BOLD, 18), plot, true);
-
-
-            ChartPanel chartPanel = new ChartPanel(barChart);
-            chartPanel.setPreferredSize(new Dimension(600, 400));
-            chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-            chartPanel.setBackground(Color.white);
-
-            // to add to the program ui
-            root.getCenter().add(chartPanel);
-            root.validate();
         }
-        // default width = 600, default height = 400, default xAxisLabel = "Years", yAxisLabel = "$US"
-        public void createTimeSeries(ProgramUI root,int method, TimeSeriesCollection dataset, String yAxisLabel) {
-            // Add sets to XYSeries Collection
-
-
-
+        public void createTimeSeries(ProgramUI root,int method, TimeSeriesCollection dataset, String[] seriesNames) {
 
             XYPlot plot = new XYPlot();
 
@@ -186,43 +134,38 @@ public class Analysis extends JFrame {
 
 
             plot.setDomainAxis(new DateAxis("Years"));
-            plot.setRangeAxis(1, new NumberAxis(yAxisLabel));
+            plot.setRangeAxis(0, new NumberAxis(seriesNames[0]));
 
             plot.mapDatasetToRangeAxis(0, 0);// 1st dataset to 1st y-axis
             plot.mapDatasetToRangeAxis(1, 1); // 2nd dataset to 2nd y-axis
 
-            JFreeChart chart = new JFreeChart(root.getAnalysisLabels()[method],
-                    new Font("Serif", Font.BOLD, 18), plot, true);
 
+
+            JFreeChart chart = new JFreeChart(root.getAnalysisLabels()[method],new Font("Serif", Font.BOLD, 18), plot, true);
+            addToUI(root,chart);
+
+        }
+        public void createReport(ProgramUI root, String finalMessage) {
+            JTextArea report = new JTextArea();
+            report.setEditable(false);
+            report.setPreferredSize(new Dimension(600, 400));
+            report.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+            report.setBackground(Color.white);
+
+            report.setText(finalMessage);
+            JScrollPane outputScrollPane = new JScrollPane(report);
+            root.getCenter().add(outputScrollPane);
+            root.validate();
+
+        }
+        private void addToUI(ProgramUI root,JFreeChart chart){
             ChartPanel chartPanel = new ChartPanel(chart);
             chartPanel.setPreferredSize(new Dimension(600, 400));
             chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
             chartPanel.setBackground(Color.white);
             root.getCenter().add(chartPanel);
             root.validate();
-
         }
-    // default width = 400, default height = 300, default xAxisLabel = "Years", yAxisLabel = "$US"
-        public void createReport(ProgramUI root, String finalMessage) {
-            JTextArea report = new JTextArea(5,40);
-            report.setEditable(false);
-            report.setPreferredSize(new Dimension(width, height));
-            report.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-            report.setBackground(Color.white);
-
-            report.setText(finalMessage);
-
-            report.setLineWrap(true);
-            report.setWrapStyleWord(true);
-
-            JPanel container = new JPanel();
-            container.add(report);
-            JScrollPane scrollPane = new JScrollPane(container);
-
-            root.getCenter().add(scrollPane);
-            root.validate();
-        }
-
         public void OutputGraphs(ProgramUI root, ArrayList<ParsedSeries> series, int method){
 
         }
