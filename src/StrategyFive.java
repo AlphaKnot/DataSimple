@@ -39,7 +39,7 @@ public class StrategyFive{
 
         // initializing the report message with a title and empty message
         String message = "";
-        String title = seriesName[0] +" vs "+seriesName[1]+"\n";
+        String title = seriesName[0] +"\n";
         StringBuilder finalMessage = new StringBuilder();
         finalMessage.append(title+"==========================================\n");
 
