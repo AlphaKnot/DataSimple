@@ -1,7 +1,7 @@
 /***
  * this class represents an object of class year with the end and start years
+ * @author Jenessa Lu
  */
-
 public class Year {
     int DDstartYear;
     int DDendYear;
