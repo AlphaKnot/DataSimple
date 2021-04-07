@@ -73,62 +73,14 @@ public class StrategyTwo {
 
 
         }
-        /*
-        Create a vector to populate the potential options for your strategy.
-         */
-        viewDropdownList = new Vector<>();
-        viewDropdownList.add("Line Chart");
-        viewDropdownList.add("Scatter Plot");
-        viewDropdownList.add("Bar Chart");
-        viewDropdownList.add("Time Series");
-        viewDropdownList.add("Report");
-        GraphAlreadySet = new Boolean[viewDropdownList.size()];
-        for(int i = 0; i<viewDropdownList.size(); i++){
-            root.viewDropdown.addItem(viewDropdownList.get(i));
-            GraphAlreadySet[i] = false;
-        }
-        strategyTwo = new Analysis(analysisNames,root,timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
-        strategyTwo.CreateLineChart(method,seriesName);
-        // Update the "GraphAlreadySet Variable"
-        strategyTwo.createScatter(method,seriesName);
-        strategyTwo.createBar(method,seriesName);
-        strategyTwo.createTimeSeries(method,seriesName);
-        GraphAlreadySet[0] = true;
-        GraphAlreadySet[1] = true;
-        GraphAlreadySet[2] = true;
-        GraphAlreadySet[3] = true;
-        root.add_view.removeActionListener(root.add_view.getActionListeners()[0]);
-        root.add_view.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("add view clicked");
-                if(root.viewDropdown.getItemCount()==0){
-                    JOptionPane.showMessageDialog(root,"You have not analyzed  a country yet, please do so before adding any viewers");
-                }
-                else{
-                    if(root.viewDropdown.getSelectedItem().equals(viewDropdownList.get(0)) && !GraphAlreadySet[0]){
-                        strategyTwo.CreateLineChart(method,seriesName);
-                    }
-                    else if(root.viewDropdown.getSelectedItem().equals(viewDropdownList.get(1)) && !GraphAlreadySet[1]){
-                        strategyTwo.createScatter(method,seriesName);
-                    }
-                    else if(root.viewDropdown.getSelectedItem().equals(viewDropdownList.get(2)) && !GraphAlreadySet[2]){
-                        strategyTwo.createBar(method,seriesName);
-                    }
-                    else if(root.viewDropdown.getSelectedItem().equals(viewDropdownList.get(3)) && !GraphAlreadySet[3]){
-                        strategyTwo.createTimeSeries(method,seriesName);
-                    }
-                    else if(root.viewDropdown.getSelectedItem().equals(viewDropdownList.get(4)) && !GraphAlreadySet[4]){
-                        strategyTwo.createReport("poop");
-                    }
-                    else{
-                        JOptionPane.showMessageDialog(root,"Graph already displayed!");
-                    }
-
-                }
-            }
-        });
+        String[] analysisTypes = {
+                "Line Chart",
+                "Scatter Plot",
+                "Bar Chart",
+                "Time Series",
+        };
+        strategyTwo = new Analysis(root,method,seriesName,analysisNames,analysisTypes,"",timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
     }
 
-    }
+}
 

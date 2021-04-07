@@ -87,13 +87,15 @@ public class StrategySeven {
             timeSeriesList.add(timeSeriesCollection);
             barSeriesList.add(barSeriesCollection);
         }
-
+        String[] analysisTypes={
+                "Line Chart",
+                "Scatter Plot",
+                "Bar Chart",
+                "Time Series",
+                "Report"
+        };
         // calling the Analysis class to compute the data into viewers
-        Analysis strategySeven = new Analysis(analysisNames,root,timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
-        strategySeven.CreateLineChart(method,seriesName);
-        strategySeven.createScatter(method,seriesName);
-        strategySeven.createBar(method,seriesName);
-        strategySeven.createTimeSeries(method,seriesName);
-        strategySeven.createReport(finalMessage.toString());
+        Analysis strategySeven = new Analysis(root,method,seriesName,analysisNames,analysisTypes,message.toString(),timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
+
     }
 }
