@@ -1,91 +1,99 @@
-import org.jfree.data.category.DefaultCategoryDataset;
+// importing the libraries required for this class
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.Year;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.concurrent.Flow;
 
+/***
+ * This class processes the data required (from the parsed series) of strategy 7
+ * Strategy 7: Infant Mortality Rate (per 1000 live births) vs Current Health Expenditure )per capita
+ * @author Jenessa Lu
+ */
 public class StrategySeven {
 
     // represents the dropdown of analyses
     String[] analysisNames;
+    // represents the name of datasets being processed
     String[] seriesName;
+    // the program ui
     ProgramUI root;
-    ArrayList<TimeSeries> timeSeriesDataSets;
-    ArrayList<TimeSeries> scatterSeriesDataSets;
-    ArrayList<DefaultCategoryDataset> barSeriesDataSets;
-    ArrayList<XYSeries> XYSeriesSets;
-    //ArrayList<String> reportMessages;
 
-    // the constructor
+    /***
+     * the constructor for strategy 7
+     * @param root the program ui
+     * @param series the dataset parsed from ParsedSeries to be used for data processing
+     * @param method the index of the analysis on the dropdown menu
+     */
     public StrategySeven(ProgramUI root, ArrayList<ParsedSeries> series, int method){
 
+        // the names of the dataset series
         seriesName = new String[] {
                 "Infant Mortality Rate (per 1000 live births)",
                 "Current Health Expenditure per capita"};
 
+        // calling the program ui
         this.root = root;
+        // getting the analysis labels to the program ui
         analysisNames = root.getAnalysisLabels();
-        timeSeriesDataSets = new ArrayList<>();
-        barSeriesDataSets = new ArrayList<>();
-        XYSeriesSets = new ArrayList<>();
-        scatterSeriesDataSets = new ArrayList<>();
 
+        // creating arraylists to store each dataset given the series' name
+        ArrayList<TimeSeriesCollection> timeSeriesList = new ArrayList<>();
+        ArrayList<TimeSeriesCollection> scatterSeriesList = new ArrayList<>();
+        ArrayList<TimeSeriesCollection> xySeriesList = new ArrayList<>();
+        ArrayList<TimeSeriesCollection> barSeriesList = new ArrayList<>();
 
+        // initializing the report message with a title and empty message
         String message = "";
         String title = seriesName[0] +" vs "+seriesName[1]+"\n";
         StringBuilder finalMessage = new StringBuilder();
-
         finalMessage.append(title+"==========================================\n");
 
+        // looping through the parsed datasets to store information
         for (int i = 0; i<series.size()-1; i++) {
-            XYSeries xyseries = new XYSeries(seriesName[i]);
+
+            // initializing the data collections
+            TimeSeriesCollection timeSeriesCollection = new TimeSeriesCollection();
+            TimeSeriesCollection scatterSeriesCollection = new TimeSeriesCollection();
+            TimeSeriesCollection xySeriesCollection = new TimeSeriesCollection();
+            TimeSeriesCollection barSeriesCollection = new TimeSeriesCollection();
+
+            // initializing the series with their appropriate names
+            TimeSeries xyseries = new TimeSeries(seriesName[i]);
             TimeSeries scatterseries = new TimeSeries(seriesName[i]);
             TimeSeries timeseries = new TimeSeries(seriesName[i]);
-            DefaultCategoryDataset barseries = new DefaultCategoryDataset();
+            TimeSeries barseries = new TimeSeries(seriesName[i]);
 
             for (int j = 0; j < series.get(i).getValues().size()-1; j++) {
-                xyseries.add(series.get(i).xDelimitation.get(j), series.get(i).getValues().get(j));
+                // adding the datasets to their series
+                xyseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                 scatterseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
-                timeseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
-                barseries.setValue(series.get(i).getValues().get(j),seriesName[i], series.get(i).xDelimitation.get(j));
+                barseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
+                timeseries.add(new Year(series.get(i).xDelimitation.get(j)), series.get(i).getValues().get(j));
 
+                // creating the report message and adding it to the final report message
                 message = seriesName[i] +" had a value in year " + series.get(i).xDelimitation.get(j) + " of "+ series.get(i).getValues().get(j)+"\n";
                 finalMessage.append(message);
 
             }
-            XYSeriesSets.add(xyseries);
-            timeSeriesDataSets.add(timeseries);
-            barSeriesDataSets.add(barseries);
-            scatterSeriesDataSets.add(scatterseries);
+            // adding the series to their collections
+            xySeriesCollection.addSeries(xyseries);
+            scatterSeriesCollection.addSeries(scatterseries);
+            timeSeriesCollection.addSeries(timeseries);
+            barSeriesCollection.addSeries(barseries);
+
+            // adding the collections to their appropriate arraylist
+            xySeriesList.add(xySeriesCollection);
+            scatterSeriesList.add(scatterSeriesCollection);
+            timeSeriesList.add(timeSeriesCollection);
+            barSeriesList.add(barSeriesCollection);
         }
 
-        XYSeriesCollection lineDataSet = new XYSeriesCollection();
-        lineDataSet.addSeries(XYSeriesSets.get(0));
-        lineDataSet.addSeries(XYSeriesSets.get(1));
-
-        TimeSeriesCollection timeSeriesDataset = new TimeSeriesCollection();
-        timeSeriesDataset.addSeries(timeSeriesDataSets.get(0));
-        timeSeriesDataset.addSeries(timeSeriesDataSets.get(1));
-
-        TimeSeriesCollection scatterDataSet = new TimeSeriesCollection();
-        scatterDataSet.addSeries(scatterSeriesDataSets.get(0));
-        scatterDataSet.addSeries(scatterSeriesDataSets.get(1));
-
-
-        Analysis strategySeven = new Analysis(analysisNames,root,timeSeriesDataSets,scatterSeriesDataSets,barSeriesDataSets,XYSeriesSets);
-        strategySeven.CreateLineChart(root,method,lineDataSet,"Years","$US",600,400);
-        strategySeven.createTimeSeries(root,method,timeSeriesDataset,"Years","$US",600,400);
-        strategySeven.createScatter(root,method,scatterDataSet,"Year","$US",600,400);
-        strategySeven.createBar(root,method,barSeriesDataSets,"Years","$US",600,400);
-        strategySeven.createReport(root, finalMessage.toString(),600,400);
-
+        // calling the Analysis class to compute the data into viewers
+        Analysis strategySeven = new Analysis(analysisNames,root,timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
+        strategySeven.CreateLineChart(method,seriesName);
+        strategySeven.createScatter(method,seriesName);
+        strategySeven.createBar(method,seriesName);
+        strategySeven.createTimeSeries(method,seriesName);
+        strategySeven.createReport(finalMessage.toString());
     }
-
 }

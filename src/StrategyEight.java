@@ -1,105 +1,95 @@
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.util.TableOrder;
-import org.jfree.data.category.DefaultCategoryDataset;
+// importing the libraries required for this class
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.Year;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 import java.util.ArrayList;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.concurrent.Flow;
-
+/***
+ * This class processes the data required (from the parsed series) of strategy 8
+ * Strategy 8: Ratio of Government Expenditure on Education, total % of GDP vs Current Health Expenditure (% of GDP)
+ * @author Jenessa Lu
+ */
 public class StrategyEight {
 
+    // represents the dropdown of analyses
     String[] analysisNames;
+    // represents the name of datasets being processed
     String[] seriesName;
+    // the program ui
     ProgramUI root;
-    ArrayList<TimeSeries> timeSeriesDatasets;
-    ArrayList<TimeSeries> scatterSeriesDatasets;
-    ArrayList<DefaultCategoryDataset> barSeriesDataSets;
-    ArrayList<XYSeries> XYSeriesSets;
 
-    ArrayList<DefaultCategoryDataset> pieDatasets;
-
-    // Ratio of Government expenditure on education,
-    // total (% of GDP) vs Current health expenditure (% of GDP).
+    /***
+     * the constructor for strategy 8
+     * @param root the program ui
+     * @param series the dataset parsed from ParsedSeries to be used for data processing
+     * @param method the index of the analysis on the dropdown menu
+     */
     public StrategyEight(ProgramUI root, ArrayList<ParsedSeries> series, int method){
-
-        // Ratio of Government expenditure on education, total (% of GDP) vs Current health expenditure (% of GDP)
+        // the names of the dataset series
         seriesName = new String[] {"Education Expenditure to GDP", "Health Expenditure to GDP"};
-
+        // calling the program ui
         this.root = root;
+        // getting the analysis labels to the program ui
         analysisNames = root.getAnalysisLabels();
-        timeSeriesDatasets = new ArrayList<>();
-        barSeriesDataSets = new ArrayList<>();
-        XYSeriesSets = new ArrayList<>();
-        scatterSeriesDatasets = new ArrayList<>();
 
-        pieDatasets = new ArrayList<>();
+        // creating arraylists to store each dataset given the series' name
+        ArrayList<TimeSeriesCollection> timeSeriesList = new ArrayList<>();
+        ArrayList<TimeSeriesCollection> scatterSeriesList = new ArrayList<>();
+        ArrayList<TimeSeriesCollection> xySeriesList = new ArrayList<>();
+        ArrayList<TimeSeriesCollection> barSeriesList = new ArrayList<>();
 
+        // initializing the report message with a title and empty message
         String message = "";
         String title = seriesName[0] +" vs "+seriesName[1]+"\n";
         StringBuilder finalMessage = new StringBuilder();
-
         finalMessage.append(title+"\n"+"==========================================\n");
 
+        // looping through the parsed datasets to store information
         for (int i = 0; i < series.size(); i++) {
-            XYSeries xyseries = new XYSeries(seriesName[i]);
+
+            // initializing the data collections
+            TimeSeriesCollection timeSeriesCollection = new TimeSeriesCollection();
+            TimeSeriesCollection scatterSeriesCollection = new TimeSeriesCollection();
+            TimeSeriesCollection xySeriesCollection = new TimeSeriesCollection();
+            TimeSeriesCollection barSeriesCollection = new TimeSeriesCollection();
+
+            // initializing the series with their appropriate names
+            TimeSeries xyseries = new TimeSeries(seriesName[i]);
             TimeSeries scatterseries = new TimeSeries(seriesName[i]);
             TimeSeries timeseries = new TimeSeries(seriesName[i]);
-            DefaultCategoryDataset barseries = new DefaultCategoryDataset();
-            DefaultCategoryDataset pieseries = new DefaultCategoryDataset();
+            TimeSeries barseries = new TimeSeries(seriesName[i]);
 
             for (int j = 0; j < series.get(i).getValues().size(); j++) {
-
-                xyseries.add(series.get(i).xDelimitation.get(j), series.get(i).getValues().get(j));
+                // adding the datasets to their series
+                xyseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                 scatterseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
-                timeseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
-                barseries.setValue(series.get(i).getValues().get(j),seriesName[i], series.get(i).xDelimitation.get(j));
+                barseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
+                timeseries.add(new Year(series.get(i).xDelimitation.get(j)), series.get(i).getValues().get(j));
 
-                // the report message to the added to the array-jen
+                // creating the report message and adding it to the final report message
                 message = seriesName[i] + " had a value in " + series.get(i).xDelimitation.get(j) + " of " + series.get(i).getValues().get(j) + "\n";
                 finalMessage.append(message);
 
-                pieseries.addValue(series.get(i).getValues().get(j),"",seriesName[i]);
             }
-            XYSeriesSets.add(xyseries);
-            timeSeriesDatasets.add(scatterseries);
-            barSeriesDataSets.add(barseries);
-            scatterSeriesDatasets.add(scatterseries);
+            // adding the series to their collections
+            xySeriesCollection.addSeries(xyseries);
+            scatterSeriesCollection.addSeries(scatterseries);
+            timeSeriesCollection.addSeries(timeseries);
+            barSeriesCollection.addSeries(barseries);
 
-            pieDatasets.add(pieseries);
+            // adding the collections to their appropriate arraylist
+            xySeriesList.add(xySeriesCollection);
+            scatterSeriesList.add(scatterSeriesCollection);
+            timeSeriesList.add(timeSeriesCollection);
+            barSeriesList.add(barSeriesCollection);
         }
-
-        XYSeriesCollection lineDataSet = new XYSeriesCollection();
-        lineDataSet.addSeries(XYSeriesSets.get(0));
-        lineDataSet.addSeries(XYSeriesSets.get(1));
-
-        TimeSeriesCollection timeSeriesDataset = new TimeSeriesCollection();
-        timeSeriesDataset.addSeries(timeSeriesDatasets.get(0));
-        timeSeriesDataset.addSeries(timeSeriesDatasets.get(1));
-
-        TimeSeriesCollection scatterDataSet = new TimeSeriesCollection();
-        scatterDataSet.addSeries(scatterSeriesDatasets.get(0));
-        scatterDataSet.addSeries(scatterSeriesDatasets.get(1));
-
-
-        Analysis strategyEight = new Analysis(analysisNames, root, timeSeriesDatasets, scatterSeriesDatasets, barSeriesDataSets, XYSeriesSets);
-        strategyEight.CreateLineChart(root, method, lineDataSet,"Years","$US",600,400);
-        strategyEight.createTimeSeries(root, method, timeSeriesDataset,"Years","$US",600,400);
-        strategyEight.createBar(root, method, barSeriesDataSets,"Years","US",600,400);
-        strategyEight.createScatter(root, method, scatterDataSet,"Years","$US",600,400);
-        strategyEight.createReport(root,finalMessage.toString(),600,400);
-
-        //strategyEight.createPieChart(root,method,pieDatasets);
+        // calling the Analysis class to compute the data into viewers
+        Analysis strategyEight = new Analysis(analysisNames,root,timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
+        strategyEight.CreateLineChart(method,seriesName);
+        strategyEight.createScatter(method,seriesName);
+        strategyEight.createBar(method,seriesName);
+        strategyEight.createTimeSeries(method,seriesName);
+        strategyEight.createReport(finalMessage.toString());
     }
-
 }
 
