@@ -34,8 +34,6 @@ import java.util.List;
  *
  *
  */
-
-
 public class Analysis extends JFrame {
     String[] analysisNames;
     ProgramUI root;
