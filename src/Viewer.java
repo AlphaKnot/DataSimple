@@ -9,11 +9,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+/**
+ * @author Nathan Halsey
+ * @author Amaar Hussein
+ * @description adds and removes viewers from the mainUI
+ */
 public class Viewer{
     Vector<String> viewDropdownList;
     Boolean[] GraphAlreadySet;
     ProgramUI root;
     int method;
+
+    /**
+     * This constructor sets up the dropdown menus and creates the viewer objects for the mainUI
+     * @param root, programUI root
+     * @param strategy, given strategy
+     * @param analysisNames, The analysis names associated with this strategy
+     * @param method, the method associated with this strategy
+     * @param finalMessage, the finalMessage for report
+     * @param seriesName, the labels for the graph
+     * @param viewerTypes, the types of viewers available for this strategy
+     */
     public Viewer(ProgramUI root, Analysis strategy, String[] analysisNames, int method, String finalMessage, String[] seriesName, String[] viewerTypes){
         /*
         Create a vector to populate the potential options for your strategy.
@@ -71,6 +87,11 @@ public class Viewer{
             }
         });
     }
+
+    /**
+     * Adds the chart to the UI
+     * @param chart, the chart associated with the viewer
+     */
     public void addToUI(JFreeChart chart){
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.addChartMouseListener( new removeGraphClicked(root,chartPanel,viewDropdownList,root.viewDropdown.getSelectedIndex(),GraphAlreadySet)) ;
@@ -80,12 +101,21 @@ public class Viewer{
         root.getCenter().add(chartPanel);
         root.validate();
     }
+
+    /**
+     *
+     * @return the set of booleans indicating whether the graph is set
+     */
     public Boolean[] getGraphAlreadySet(){
         return GraphAlreadySet;
     }
 
 
 }
+
+/**
+ * Removes graph from mainUI
+ */
 class removeGraphClicked implements ChartMouseListener {
     int index; // Index for removal of chart to set to false
     Vector<String> viewDropdownList;
