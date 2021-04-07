@@ -1,27 +1,28 @@
-/***
- * this class implements the login interface of the main program
- */
-
+// imported the libraries required for this class
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
-
 import javax.swing.*;
 
-
+/***
+ * this class represents the login interface of the software
+ * @author Jenessa Lu, Nathan Halsey, Ammar Hussein
+ */
 public class LoginInterface extends JFrame implements ActionListener{
 
+    // creating instance panels and fields
     JPanel panel;
     JLabel user_label, password_label, message;
     JTextField userName_text;
     JPasswordField password_text;
-    JButton submit, cancel;
+    JButton submit;
 
-    LoginInterface() {
+    /***
+     * the constructor for the login interface
+     */
+    public LoginInterface() {
 
         // User Label
         user_label = new JLabel();
@@ -33,8 +34,6 @@ public class LoginInterface extends JFrame implements ActionListener{
         password_label = new JLabel();
         password_label.setText("Password :");
         password_text = new JPasswordField();
-
-        // Submit
 
         submit = new JButton("SUBMIT");
 
@@ -56,7 +55,7 @@ public class LoginInterface extends JFrame implements ActionListener{
         submit.addActionListener(this);
         password_text.addActionListener(this);
         add(panel, BorderLayout.CENTER);
-        setTitle("Please Login Here !");
+        setTitle("Login -- Alpha Knot Inc.");
         setSize(450, 150);
         setVisible(true);
 
@@ -92,7 +91,7 @@ public class LoginInterface extends JFrame implements ActionListener{
             mainUI.setVisible(true);
            this.setVisible(false);
         }
-        // if there is an error, will
+        // if there is an error, will send a message that it is invalid
         else{
             message.setText("Invalid username or password.");
         }
