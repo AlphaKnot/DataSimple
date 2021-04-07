@@ -1,38 +1,21 @@
 import org.jfree.chart.*;
 import org.jfree.chart.axis.*;
 import org.jfree.chart.labels.StandardXYToolTipGenerator;
-import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.renderer.xy.XYSplineRenderer;
-import org.jfree.chart.title.LegendTitle;
-import org.jfree.chart.urls.StandardXYURLGenerator;
-import org.jfree.chart.util.Args;
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
-import org.jfree.data.xy.IntervalXYDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.*;
-import java.util.List;
 
 /**
  * @author Nathan Halsey
  * @author Amaar Hussein
- * @description Analysis class creates the charts to be added
- * to the viewer
- *
- *
+ * Analysis class creates the charts to be added to the viewer
  */
 public class Analysis extends JFrame {
     String[] analysisNames;
@@ -62,10 +45,10 @@ public class Analysis extends JFrame {
 
     }
 
-    // Creates a line chart
+    /***
+     * method to create a line chart dynamically given the data
+     */
     public void CreateLineChart() {
-
-
         XYPlot plot = new XYPlot();
 
         plot.setOrientation(PlotOrientation.VERTICAL);
@@ -92,7 +75,9 @@ public class Analysis extends JFrame {
 
     }
 
-    // creates a scatter chart
+    /***
+     * creates a scatter chart
+     */
     public void createScatter() {
 
         XYPlot plot = new XYPlot();
@@ -117,10 +102,11 @@ public class Analysis extends JFrame {
 
     }
 
-    // creates a bar chart
+    /***
+     *  creates a bar chart
+     */
     public void createBar() {
-
-
+        
         XYPlot plot = new XYPlot();
         plot.setDomainAxis(new DateAxis("Years"));
         for (int i = 0; i < barSeriesCollection.size(); i++) {
@@ -137,7 +123,9 @@ public class Analysis extends JFrame {
 
     }
 
-    // creates a time series
+    /***
+     * creates a time series
+     */
     public void createTimeSeries() {
 
         XYPlot plot = new XYPlot();
@@ -164,7 +152,10 @@ public class Analysis extends JFrame {
 
     }
 
-    // creates a report
+    /***
+     * creates a report
+     * @param finalMessage the message to be displayed
+     */
     public void createReport(String finalMessage) {
         JTextArea report = new JTextArea();
 
