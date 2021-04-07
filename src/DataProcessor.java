@@ -53,6 +53,7 @@ public class DataProcessor {
                 break;
             case 2:
                  strategyThree = new StrategyThree(root, series, method);
+                 break;
             case 3:
                  strategyFour = new StrategyFour(root, series, method);
                 break;
@@ -60,7 +61,7 @@ public class DataProcessor {
                  strategyFive = new StrategyFive(root,series,method);
                 break;
             case 5:
-                //No
+                // working on that
                 break;
             case 6:
                  strategySeven = new StrategySeven(root,series,method);
