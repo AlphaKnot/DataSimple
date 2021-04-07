@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 /**
  * @author nathan halsey
- * @description completes analyis for strategy 3
+ * @description completes analysis for strategy 3
  *
  */
 public class StrategyThree {
