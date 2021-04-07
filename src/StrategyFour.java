@@ -64,12 +64,14 @@ public class StrategyFour{
 
 
         }
+        String[] analysisTypes = {
+            "Line Chart",
+            "Scatter Plot",
+            "Bar Chart",
+            "Time Series",
+            "Report"
+        };
+        Analysis strategyFour = new Analysis(root,method,seriesName,analysisNames,analysisTypes,message.toString(),timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
 
-        Analysis strategyFour = new Analysis(analysisNames,root,timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
-
-        strategyFour.createScatter(method,seriesName);
-        strategyFour.createBar(method,seriesName);
-        strategyFour.createTimeSeries(method,seriesName);
-        strategyFour.createReport(stringBuilder.toString());
     }
 }

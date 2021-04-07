@@ -83,16 +83,15 @@ public class StrategyThree {
                 "GDP (per capita)",
                 "CO2/GDP"
         };
+        String[] viewerTypes={
+            "Line Chart",
+            "Scatter Plot",
+            "Bar Chart",
+            "Time Series",
+        };
 
-        System.out.println(xySeriesList.size());
-        System.out.println(scatterSeriesList.size());
-        System.out.println(timeSeriesList.size());
-        System.out.println(barSeriesList.size());
-        Analysis strategyThree = new Analysis(analysisNames,root,timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
-        strategyThree.CreateLineChart(method,axis);
-        strategyThree.createScatter(method,axis);
-        strategyThree.createTimeSeries(method,axis);
-        strategyThree.createBar(method,axis);
+        Analysis strategyThree = new Analysis(root,method,axis,analysisNames,viewerTypes,"",timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
+
 
 
 
