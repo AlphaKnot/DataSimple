@@ -5,7 +5,11 @@ import org.jfree.data.time.Year;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import java.util.ArrayList;
-
+/**
+ * @author nathan halsey
+ * @description completes analyis for strategy 6
+ *
+ */
 public class StrategySix {
     String[] analysisNames;
     String[] seriesName;
@@ -14,18 +18,20 @@ public class StrategySix {
     ArrayList<TimeSeriesCollection> scatterSeriesList;
     ArrayList<TimeSeriesCollection> barSeriesList;
     ArrayList<TimeSeriesCollection> xySeriesList;
-
+    // Constructor is only thing needed
     public StrategySix(ProgramUI root, ArrayList<ParsedSeries> series, int method) {
-
+        // graph labels
         seriesName = new String[]{"Hospital Beds","Current Health Care Expenditure","Ratio of Hospital beds to CHE"};
 
         this.root = root;
+        //initialize containers
         analysisNames = root.getAnalysisLabels();
         timeSeriesList = new ArrayList<>();
         barSeriesList = new ArrayList<>();
         xySeriesList = new ArrayList<>();
         scatterSeriesList = new ArrayList<>();
 
+        // create datasets
         for (int i  = 0; i < series.size()+1; i++) {
 
             TimeSeriesCollection timeSeriesCollection = new TimeSeriesCollection();
@@ -77,19 +83,20 @@ public class StrategySix {
             timeSeriesList.add(timeSeriesCollection);
             barSeriesList.add(barSeriesCollection);
         }
-
+        //axis names
         String[] axis={
                 "Beds",
                 "Expenditure",
                 "Beds/Expenditure"
         };
+        // types of viewers associated with this analysis type
         String[] viewerTypes={
                 "Line Chart",
                 "Scatter Plot",
                 "Bar Chart",
                 "Time Series",
         };
-
+        // completes the analysis and generates viewer
         Analysis strategySix = new Analysis(root,method,axis,analysisNames,viewerTypes,"",timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
 
 
