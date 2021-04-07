@@ -146,12 +146,15 @@ public class Analysis extends JFrame {
             JTextArea report = new JTextArea();
 
             report.setEditable(false);
-            report.setPreferredSize(new Dimension(600, 400));
-            report.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-            report.setBackground(Color.white);
             report.setText(finalMessage);
+
             JScrollPane outputScrollPane = new JScrollPane(report);
+            outputScrollPane.createVerticalScrollBar();
+            outputScrollPane.setPreferredSize(new Dimension(600,400));
+            outputScrollPane.setBackground(Color.white);
+            outputScrollPane.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
             root.getCenter().add(outputScrollPane);
+
             root.validate();
 
         }
