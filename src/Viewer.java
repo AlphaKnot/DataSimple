@@ -13,11 +13,13 @@ public class Viewer{
     Vector<String> viewDropdownList;
     Boolean[] GraphAlreadySet;
     ProgramUI root;
+    int method;
     public Viewer(ProgramUI root, Analysis strategy, String[] analysisNames, int method, String finalMessage, String[] seriesName, String[] viewerTypes){
         /*
         Create a vector to populate the potential options for your strategy.
          */
         this.root = root;
+        this.method = method;
         viewDropdownList = new Vector<>();
         GraphAlreadySet = new Boolean[viewerTypes.length];
         for (int i = 0; i < viewerTypes.length; i++){
@@ -71,28 +73,7 @@ public class Viewer{
     }
     public void addToUI(JFreeChart chart){
         ChartPanel chartPanel = new ChartPanel(chart);
-        ChartPanel.addListener(new removeGraphClicked(Vector<String> viewDropdownList, int index);
-        chartPanel.addChartMouseListener(new ChartMouseListener() {
-            @Override
-            public void chartMouseClicked(ChartMouseEvent cme) {
-                if (root.minusButtonClicked) {
-                    chartPanel.removeAll();
-                    root.minusButtonClicked = false;
-                    System.out.println("Removed graph");
-                    root.getCenter().remove(chartPanel);
-                    root.validate();
-                    root.pack();
-                }
-                else
-                    System.out.println("+ not clicked yet");
-            }
-
-            @Override
-            public void chartMouseMoved(ChartMouseEvent chartMouseEvent) {
-
-            }
-
-        });
+        chartPanel.addChartMouseListener( new removeGraphClicked(root,chartPanel,viewDropdownList,method,GraphAlreadySet)) ;
         chartPanel.setPreferredSize(new Dimension(600, 400));
         chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         chartPanel.setBackground(Color.white);
@@ -105,31 +86,40 @@ public class Viewer{
 
 
 }
-static class removeGraphClicked implements ActionListener {
+class removeGraphClicked implements ChartMouseListener {
     int index; // Index for removal of chart to set to false
     Vector<String> viewDropdownList;
     ProgramUI root;
-    ChartMouseEvent cme;
-    public removeGraphClicked(ProgramUI root, Vector<String> viewDropdownList,int index) {
+    ChartPanel chartPanel;
+    Boolean[] graphAlreadySet;
+    public removeGraphClicked(ProgramUI root, ChartPanel chartPanel, Vector<String> viewDropdownList, int index, Boolean[] graphAlreadySet) {
         this.root = root;
         this.viewDropdownList = viewDropdownList;
-        @Override
-        public void chartMouseClicked (ChartMouseEvent cme, ChartPanel chartPanel){
-            if (root.minusButtonClicked) {
+        this.chartPanel = chartPanel;
+        this.index = index;
+        this.graphAlreadySet=graphAlreadySet;
+    }
+
+    @Override
+    public void chartMouseClicked(ChartMouseEvent chartMouseEvent) {
+        if (root.minusButtonClicked) {
+            if(viewDropdownList.size()==0){
+                JOptionPane.showMessageDialog(root,"No charts clicked");
+            }
+            else {
                 chartPanel.removeAll();
+                graphAlreadySet[index] = false;
                 root.minusButtonClicked = false;
                 System.out.println("Removed graph");
                 root.getCenter().remove(chartPanel);
                 root.validate();
                 root.pack();
-            } else
-                System.out.println("+ not clicked yet");
-        }
-
-        @Override
-        public void chartMouseMoved (ChartMouseEvent chartMouseEvent){
-
-        }
+            }
+        } else
+            System.out.println("+ not clicked yet");
     }
+    @Override
+    public void chartMouseMoved(ChartMouseEvent chartMouseEvent) {
 
+    }
 }
