@@ -1,3 +1,4 @@
+// importing the required libraries for this class
 import java.util.ArrayList;
 
 /***
@@ -11,6 +12,11 @@ import java.util.ArrayList;
  * SH.XPD.CHEX.GD.ZS * NY.GDP.PCAP.CD ( USD ) vs  	SP.DYN.IMRT.IN  | 2 series graph
  * SE.XPD.TOTL.GD.ZS vs SH.XPD.CHEX.GD.ZS
  */
+
+/***
+ * this class represents a Country object
+ * @author Amaar Hussein
+ */
 public class Country {
     // Contains country name, country values, and country years.
     ArrayList<ArrayList<Float>> value = new ArrayList<>();
@@ -21,10 +27,10 @@ public class Country {
 
     /***
      * Parameter to init country values (NOT value, set after query)
-     * @param countryName
-     * @param countryCode
-     * @param startYear
-     * @param endYear
+     * @param countryName the country name
+     * @param countryCode the country code
+     * @param startYear the starting year
+     * @param endYear the ending year
      */
     public Country(String countryName, String countryCode, int startYear, int endYear){
         this.years = new Year(startYear,endYear);
@@ -37,10 +43,13 @@ public class Country {
 
     }
 
+    /***
+     * toString() method
+     * @return the country name string
+     */
     @Override
     public String toString() {
        return countryName;
     }
-    // How would we retrieve the parsed info? Data parser call!
-
+    
 }
