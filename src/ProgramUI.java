@@ -69,7 +69,7 @@ public class ProgramUI extends JFrame{
 
         center.setLayout(new FlowLayout());
         setSize(1400,1000);
-        setTitle("Country Statistics -- Alpha Knot inc");
+        setTitle("DatSimp -- Alpha Knot inc");
         add(rootPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // Set length for analysis dropdown
