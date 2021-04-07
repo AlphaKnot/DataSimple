@@ -47,7 +47,6 @@ public class DataParser {
 
     public DataParser(String[] indicator, String country_code, String yearStart, String yearEnd) {
         // Formats url with parameters of constructor
-
         // Setting attributes;
         this.indicator = indicator;
         this.country_code = country_code;
@@ -58,7 +57,7 @@ public class DataParser {
             ArrayList<Float> values = new ArrayList<>();
             ArrayList<Integer> valid_years = new ArrayList<>();
             cum_avg = 0;
-
+            // String URL generated from attributes
             String urlString = String.format("http://api.worldbank.org/v2/country/" + country_code + "/indicator/" + indicator[j] + "?date=" + yearStart + ":" + yearEnd + "&format=json", "can");
 
             System.out.println(urlString);
@@ -117,12 +116,7 @@ public class DataParser {
                             //  GIVEN YEAR
 
                             if (jsonArray.get(1).getAsJsonArray().get(i).getAsJsonObject().get("value").isJsonNull()) {
-                                // Note Ammar , should this be value = 0 or continue?
-                            /*
-                            valid_years.add(year);
-                            values.add(0.0F);
-
-                             */
+                               // Null point found, skipping value
                                 continue;
                             } else {
 
