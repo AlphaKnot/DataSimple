@@ -64,12 +64,14 @@ public class StrategyFive{
 
 
         }
+        String[] viewerTypes={
+            "Line Chart",
+            "Scatter Plot",
+            "Bar Chart",
+            "Time Series",
+            "Report",
+        };
+        Analysis strategyFive = new Analysis(root,method,seriesName,analysisNames,viewerTypes,message.toString(),timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
 
-        Analysis strategyFive = new Analysis(analysisNames,root,timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
-
-        strategyFive.createScatter(method,seriesName);
-        strategyFive.createBar(method,seriesName);
-        strategyFive.createTimeSeries(method,seriesName);
-        strategyFive.createReport(stringBuilder.toString());
     }
 }

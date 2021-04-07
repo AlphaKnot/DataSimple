@@ -84,12 +84,15 @@ public class StrategyEight {
             barSeriesList.add(barSeriesCollection);
         }
         // calling the Analysis class to compute the data into viewers
-        Analysis strategyEight = new Analysis(analysisNames,root,timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
-        strategyEight.CreateLineChart(method,seriesName);
-        strategyEight.createScatter(method,seriesName);
-        strategyEight.createBar(method,seriesName);
-        strategyEight.createTimeSeries(method,seriesName);
-        strategyEight.createReport(finalMessage.toString());
+        String[] viewerTypes ={
+                "Line Chart",
+                "Scatter Plot",
+                "Bar Chart",
+                "Time Series",
+                "Report"
+        };
+        Analysis strategyEight = new Analysis(root,method,seriesName,analysisNames,viewerTypes,finalMessage.toString(),timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
+
     }
 }
 
