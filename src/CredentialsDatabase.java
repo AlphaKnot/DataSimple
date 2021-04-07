@@ -1,18 +1,20 @@
-/***
- * this class implements the database of the login system using a hash table
- */
-
+// importing the libraries required for this class
 import java.io.*;
 import java.util.*;
 
+/***
+ * this class implements the database of the login system using a hash table
+ * @author Jenessa Lu
+ */
 public class CredentialsDatabase{
     Hashtable database = new Hashtable<>();
 
     /***
-     * constructs the database
+     * the constructor for the database
      * @throws Exception if the file could not be read
      */
     public CredentialsDatabase() throws Exception{
+        // reads the credentials text file
         BufferedReader br = new BufferedReader((new FileReader("credentials.txt")));
 
         String line;
@@ -24,6 +26,7 @@ public class CredentialsDatabase{
             username = line;
             password = br.readLine();
             User user = new User(username,password);
+            // puts the information into the database
             database.put(user.getUsername(),user.getPassword());
         }
     }
