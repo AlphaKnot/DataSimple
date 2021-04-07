@@ -193,6 +193,7 @@ public class ProgramUI extends JFrame{
         public void actionPerformed(ActionEvent e) {
             main.center.removeAll();
             main.refreshCenter();
+            main.repaint();
             main.revalidate();
             viewDropdown.removeAllItems();
             // This call to method will call the necessary action to calculate the graph required, possibly use jenessa's code? ~ marz
