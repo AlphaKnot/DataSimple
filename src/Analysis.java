@@ -204,20 +204,23 @@ public class Analysis extends JFrame {
         }
     // default width = 400, default height = 300, default xAxisLabel = "Years", yAxisLabel = "$US"
         public void createReport(ProgramUI root, String finalMessage) {
-            JTextArea report = new JTextArea();
+            JTextArea report = new JTextArea(5,40);
             report.setEditable(false);
-            report.setPreferredSize(new Dimension(600, 400));
+            report.setPreferredSize(new Dimension(width, height));
             report.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
             report.setBackground(Color.white);
 
-            // check strat7 to see how to get this finalmessage string
-
             report.setText(finalMessage);
-            JScrollPane outputScrollPane = new JScrollPane(report);
-            root.getCenter().add(outputScrollPane);
+
+            report.setLineWrap(true);
+            report.setWrapStyleWord(true);
+
+            JPanel container = new JPanel();
+            container.add(report);
+            JScrollPane scrollPane = new JScrollPane(container);
+
+            root.getCenter().add(scrollPane);
             root.validate();
-
-
         }
 
         public void OutputGraphs(ProgramUI root, ArrayList<ParsedSeries> series, int method){
