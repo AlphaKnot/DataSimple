@@ -87,6 +87,7 @@ public class StrategySeven {
             timeSeriesList.add(timeSeriesCollection);
             barSeriesList.add(barSeriesCollection);
         }
+        // the options for the dropdown
         String[] analysisTypes={
                 "Line Chart",
                 "Scatter Plot",
