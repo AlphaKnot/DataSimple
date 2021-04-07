@@ -148,6 +148,9 @@ class removeGraphClicked implements ChartMouseListener {
         } else
             System.out.println("+ not clicked yet");
     }
+    /***
+    * event for if the mouse moves
+    */
     @Override
     public void chartMouseMoved(ChartMouseEvent chartMouseEvent) {
 
