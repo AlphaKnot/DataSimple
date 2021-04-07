@@ -25,8 +25,8 @@ public class StrategyTwo {
     public StrategyTwo(ProgramUI root, ArrayList<ParsedSeries> series, int method){
 
         seriesName = new String[]{
-                "(micrograms per cubic meter)",
-                "(% of land area)",
+                "PM2.5 air pollution, mean annual exposure ",
+                "Forest area (% of land area)",
         };
         this.root = root;
 
@@ -73,13 +73,18 @@ public class StrategyTwo {
 
 
         }
-        String[] analysisTypes = {
+        String[] viewerTypes = {
                 "Line Chart",
                 "Scatter Plot",
                 "Bar Chart",
                 "Time Series",
+                "Report"
         };
-        strategyTwo = new Analysis(root,method,seriesName,analysisNames,analysisTypes,"",timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
+        String[] axis={
+                "(micrograms per cubic meter)",
+                "(% of land area)",
+        };
+        strategyTwo = new Analysis(root,method,axis,analysisNames,viewerTypes,"",timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
     }
 
 }

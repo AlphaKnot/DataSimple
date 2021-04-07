@@ -19,9 +19,9 @@ public class StrategyOne{
     Viewer myView;
     public StrategyOne(ProgramUI root, ArrayList<ParsedSeries> series, int method){
         seriesName = new String[]{
-                "(metric tons per capita)",
-                "(kg of oil equivalent per capita)",
-                "(micrograms per cubic meter)",
+                "CO2 emissions (metric tons per capita) ",
+                "Energy use (kg of oil equivalent per capita) ",
+                "PM2.5 air pollution, mean annual exposure (micrograms per cubic meter) ",
 
         };
         this.root = root;
@@ -74,8 +74,15 @@ public class StrategyOne{
             "Scatter Plot",
             "Bar Chart",
             "Time Series",
+            "Report"
         };
-        strategyOne = new Analysis(root,method,seriesName,analysisNames,viewerTypes,"",timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
+        String[] axis={
+                "(metric tonper capita)",
+                "(kg per capita)",
+                "(micrograms per cubic meter)"
+        };
+
+        strategyOne = new Analysis(root,method,axis,analysisNames,viewerTypes,"",timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
     }
 
     public Analysis getAnalysis() {
