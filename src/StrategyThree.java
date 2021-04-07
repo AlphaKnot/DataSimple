@@ -6,6 +6,11 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import java.util.ArrayList;
 
+/**
+ * @author nathan halsey
+ * @description completes analyis for strategy 3
+ *
+ */
 public class StrategyThree {
     String[] analysisNames;
     String[] seriesName;
@@ -15,17 +20,22 @@ public class StrategyThree {
     ArrayList<TimeSeriesCollection> barSeriesList;
     ArrayList<TimeSeriesCollection> xySeriesList;
 
+    // constructor is only thing needed
     public StrategyThree(ProgramUI root, ArrayList<ParsedSeries> series, int method) {
 
+        // graph labels
         seriesName = new String[]{"CO2 Emissions (Per Capita)","GDP (Per Capita)","Ratio of CO2 to GDP"};
 
         this.root = root;
+        //initialize containers
         analysisNames = root.getAnalysisLabels();
         timeSeriesList = new ArrayList<>();
         barSeriesList = new ArrayList<>();
         xySeriesList = new ArrayList<>();
         scatterSeriesList = new ArrayList<>();
+        StringBuilder stringBuilder = new StringBuilder();
 
+        // create datasets
         for (int i  = 0; i < series.size()+1; i++) {
 
             TimeSeriesCollection timeSeriesCollection = new TimeSeriesCollection();
@@ -64,7 +74,6 @@ public class StrategyThree {
                     scatterseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                     barseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                     timeseries.add(new Year(series.get(i).xDelimitation.get(j)), series.get(i).getValues().get(j));
-
                 }
             }
             xySeriesCollection.addSeries(xyseries);
@@ -77,19 +86,20 @@ public class StrategyThree {
             timeSeriesList.add(timeSeriesCollection);
             barSeriesList.add(barSeriesCollection);
         }
-
+        // axis names
         String[] axis={
                 "CO2 (per capita)",
                 "GDP (per capita)",
                 "CO2/GDP"
         };
+        // types of viewers associated with this analysis type
         String[] viewerTypes={
             "Line Chart",
             "Scatter Plot",
             "Bar Chart",
             "Time Series",
         };
-
+        // completes the analysis, and generates viewer
         Analysis strategyThree = new Analysis(root,method,axis,analysisNames,viewerTypes,"",timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
 
 
