@@ -42,7 +42,7 @@ public class StrategySeven {
         String title = seriesName[0] +" vs "+seriesName[1]+"\n";
         StringBuilder finalMessage = new StringBuilder();
 
-        finalMessage.append(title+"\n"+"==========================================\n");
+        finalMessage.append(title+"==========================================\n");
 
         for (int i = 0; i<series.size()-1; i++) {
             XYSeries xyseries = new XYSeries(seriesName[i]);
