@@ -73,7 +73,7 @@ public class Viewer{
     }
     public void addToUI(JFreeChart chart){
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.addChartMouseListener( new removeGraphClicked(root,chartPanel,viewDropdownList,method,GraphAlreadySet)) ;
+        chartPanel.addChartMouseListener( new removeGraphClicked(root,chartPanel,viewDropdownList,root.viewDropdown.getSelectedIndex(),GraphAlreadySet)) ;
         chartPanel.setPreferredSize(new Dimension(600, 400));
         chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         chartPanel.setBackground(Color.white);
