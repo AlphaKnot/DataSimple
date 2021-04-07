@@ -37,20 +37,27 @@ import java.util.List;
 public class Analysis extends JFrame {
         String[] analysisNames ;
         ProgramUI root;
+        int method;
+        String[] seriesName;
+        Viewer myView;
         ArrayList<TimeSeriesCollection> timeSeriesCollection;
         ArrayList<TimeSeriesCollection> scatterSeriesCollection;
         ArrayList<TimeSeriesCollection> barSeriesCollection;
         ArrayList<TimeSeriesCollection> xySeriesCollection;
-        public Analysis(String[] analysisNames,ProgramUI root, ArrayList<TimeSeriesCollection> timeSeriesCollection, ArrayList<TimeSeriesCollection> scatterSeriesCollection, ArrayList<TimeSeriesCollection> barSeriesCollection, ArrayList<TimeSeriesCollection> xySeriesCollection){
+        public Analysis(ProgramUI root,int method, String[] seriesName, String[] analysisNames, String[] viewerTypes, String finalMessage,ArrayList<TimeSeriesCollection> timeSeriesCollection, ArrayList<TimeSeriesCollection> scatterSeriesCollection, ArrayList<TimeSeriesCollection> barSeriesCollection, ArrayList<TimeSeriesCollection> xySeriesCollection){
             this.root = root;
+            this.method = method;
+            this.seriesName = seriesName;
             this.analysisNames = analysisNames;
             this.timeSeriesCollection = timeSeriesCollection;
             this.scatterSeriesCollection = scatterSeriesCollection;
             this.barSeriesCollection = barSeriesCollection;
             this.xySeriesCollection = xySeriesCollection;
 
+            myView = myView = new Viewer(root,this,analysisNames,method,"",seriesName,viewerTypes);
+
         }
-        public void CreateLineChart(int method, String[] seriesNames){
+        public void CreateLineChart(){
 
 
 
@@ -62,24 +69,24 @@ public class Analysis extends JFrame {
             plot.setRangeAxis(new NumberAxis(""));
 
 
-            for (int i = 0; i < seriesNames.length; i++) {
+            for (int i = 0; i < seriesName.length; i++) {
                 XYItemRenderer itemrenderer = new XYLineAndShapeRenderer(true, false);
                 itemrenderer.setDefaultToolTipGenerator(new StandardXYToolTipGenerator());
                 plot.setDataset(i,xySeriesCollection.get(i));
                 plot.setRenderer(i,itemrenderer);
                 plot.mapDatasetToRangeAxis(i,i);
-                plot.setRangeAxis(i, new NumberAxis(seriesNames[i]));
+                plot.setRangeAxis(i, new NumberAxis(seriesName[i]));
                 plot.getRangeAxis().setAutoRange(true);
                 plot.getDomainAxis().setAutoRange(true);
             }
 
             JFreeChart chart = new JFreeChart(analysisNames[method], JFreeChart.DEFAULT_TITLE_FONT, plot, true);
 
-            addToUI(chart);
+            myView.addToUI(chart);
 
 
         }
-        public void createScatter(int method, String[] seriesNames) {
+        public void createScatter() {
 
             XYPlot plot = new XYPlot();
 
@@ -89,21 +96,21 @@ public class Analysis extends JFrame {
             plot.setDomainAxis(domainAxis);
             plot.setRangeAxis(new NumberAxis(""));
 
-            for (int i = 0; i < seriesNames.length; i++){
+            for (int i = 0; i < seriesName.length; i++){
                 plot.setDataset(i,scatterSeriesCollection.get(i));
                 XYItemRenderer itemrenderer = new XYLineAndShapeRenderer(false, true);
                 plot.setRenderer(i,itemrenderer);
-                plot.setRangeAxis(i,new NumberAxis(seriesNames[i]));
+                plot.setRangeAxis(i,new NumberAxis(seriesName[i]));
                 plot.mapDatasetToRangeAxis(i,i);
                 plot.getRangeAxis().setAutoRange(true);
                 plot.getDomainAxis().setAutoRange(true);
             }
 
             JFreeChart scatterChart = new JFreeChart(analysisNames[method], new Font("Serif", Font.BOLD, 18), plot, true);
-            addToUI(scatterChart);
+            myView.addToUI(scatterChart);
 
         }
-        public void createBar(int method,String[] seriesNames){
+        public void createBar(){
 
 
             XYPlot plot = new XYPlot();
@@ -113,26 +120,26 @@ public class Analysis extends JFrame {
                 plot.setDataset(i,barSeriesCollection.get(i));
                 plot.setRenderer(i,renderer);
                 plot.mapDatasetToRangeAxis(i,i);
-                plot.setRangeAxis(i, new NumberAxis(seriesNames[i]));
+                plot.setRangeAxis(i, new NumberAxis(seriesName[i]));
                 plot.getRangeAxis().setAutoRange(true);
             }
 
             JFreeChart barChart = new JFreeChart(analysisNames[method], new Font("Serif", Font.BOLD, 18), plot, true);
-            addToUI(barChart);
+            myView.addToUI(barChart);
 
         }
-        public void createTimeSeries(int method,String[] seriesNames) {
+        public void createTimeSeries() {
 
             XYPlot plot = new XYPlot();
 
             plot.setDomainAxis(new DateAxis("Years"));
             plot.setRangeAxis(new NumberAxis(""));
 
-            for (int i = 0; i < seriesNames.length; i++){
+            for (int i = 0; i < seriesName.length; i++){
                 plot.setDataset(i,timeSeriesCollection.get(i));
                 XYSplineRenderer splinerenderer = new XYSplineRenderer();
                 plot.setRenderer(i,splinerenderer);
-                NumberAxis current_axis = new NumberAxis(seriesNames[i]);
+                NumberAxis current_axis = new NumberAxis(seriesName[i]);
                 current_axis.setAutoRange(true);
                 plot.setRangeAxis(i,current_axis);
                 plot.mapDatasetToRangeAxis(i,i);
@@ -143,7 +150,7 @@ public class Analysis extends JFrame {
 
             JFreeChart chart = new JFreeChart(root.getAnalysisLabels()[method],new Font("Serif", Font.BOLD, 18), plot, true);
 
-            addToUI(chart);
+            myView.addToUI(chart);
 
         }
         public void createReport(String finalMessage) {
@@ -162,36 +169,7 @@ public class Analysis extends JFrame {
             root.validate();
 
         }
-    private void addToUI(JFreeChart chart){
-        ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.addChartMouseListener(new ChartMouseListener() {
-            @Override
-            public void chartMouseClicked(ChartMouseEvent cme) {
-                if (root.minusButtonClicked) {
-                    chartPanel.removeAll();
-                    root.minusButtonClicked = false;
-                    System.out.println("Removed graph");
-                    root.getCenter().remove(chartPanel);
-                    root.validate();
-                    root.pack();
-                }
-                else
-                    System.out.println("+ not clicked yet");
-            }
-
-            @Override
-            public void chartMouseMoved(ChartMouseEvent chartMouseEvent) {
-
-            }
-
-        });
-        chartPanel.setPreferredSize(new Dimension(600, 400));
-        chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        chartPanel.setBackground(Color.white);
-        root.getCenter().add(chartPanel);
-        root.validate();
-    }
-    // Action listener , for when the addView button is clicked ( + / plus button )
+        // Action listener , for when the addView button is clicked ( + / plus button )
 
 
 }
