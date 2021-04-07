@@ -14,26 +14,46 @@ import java.util.Vector;
  * @author Amaar Hussein
  */
 public class StrategyTwo {
+    // the analysis object representing strategy 2
     Analysis strategyTwo;
+    // represents the dropdown of analyses
     String[] analysisNames;
+    // represents the name of datasets being processed
     String[] seriesName;
+    // the program ui
     ProgramUI root;
+    
+    // creating arraylists to store each dataset given the series' name
     ArrayList<TimeSeries> timeSeriesDatasets;
     ArrayList<TimeSeries> scatterSeriesDatasets;
     DefaultCategoryDataset barSeries;
     ArrayList<XYSeries> XYSeriesSets;
+    
+    // represents the dropdown menu
     Vector<String> viewDropdownList;
+    // boolean array that checks if the graph is already set
     Boolean[] GraphAlreadySet;
+    
+    /***
+     * the constructor for strategy 2
+     * @param root the program ui
+     * @param series the dataset parsed from ParsedSeries to be used for data processing
+     * @param method the index of the analysis on the dropdown menu
+     */
     public StrategyTwo(ProgramUI root, ArrayList<ParsedSeries> series, int method){
 
+        // the names of the dataset series
         seriesName = new String[]{
                 "(micrograms per cubic meter)",
                 "(% of land area)",
         };
+        // calling the program ui
         this.root = root;
 
+        // getting the analysis labels to the program ui
         analysisNames = root.getAnalysisLabels();
 
+        // creating arraylists to store each dataset given the series' name
         ArrayList<TimeSeriesCollection> timeSeriesList = new ArrayList<>();
         ArrayList<TimeSeriesCollection> scatterSeriesList = new ArrayList<>();
         ArrayList<TimeSeriesCollection> xySeriesList = new ArrayList<>();
@@ -44,15 +64,17 @@ public class StrategyTwo {
         String title = seriesName[0] +" vs "+seriesName[1]+"\n";
         StringBuilder finalMessage = new StringBuilder();
         finalMessage.append(title+"==========================================\n");
-
-
+        
+        // looping through the parsed datasets to store information
         for (int i = 0; i < series.size(); i++) {
 
+            // initializing the data collections
             TimeSeriesCollection timeSeriesCollection = new TimeSeriesCollection();
             TimeSeriesCollection scatterSeriesCollection = new TimeSeriesCollection();
             TimeSeriesCollection xySeriesCollection = new TimeSeriesCollection();
             TimeSeriesCollection barSeriesCollection = new TimeSeriesCollection();
 
+            // initializing the series with their appropriate names
             TimeSeries xyseries = new TimeSeries(seriesName[i]);
             TimeSeries scatterseries = new TimeSeries(seriesName[i]);
             TimeSeries timeseries = new TimeSeries(seriesName[i]);
@@ -60,6 +82,7 @@ public class StrategyTwo {
 
 
             for (int j = 0; j < series.get(i).getValues().size(); j++) {
+                // adding the datasets to their series
                 xyseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                 scatterseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                 barseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
@@ -70,27 +93,28 @@ public class StrategyTwo {
                 finalMessage.append(message);
             }
 
+            // adding the series to their collections
             xySeriesCollection.addSeries(xyseries);
             scatterSeriesCollection.addSeries(scatterseries);
             timeSeriesCollection.addSeries(timeseries);
             barSeriesCollection.addSeries(barseries);
 
+            // adding the collections to their appropriate arraylist
             xySeriesList.add(xySeriesCollection);
             scatterSeriesList.add(scatterSeriesCollection);
             timeSeriesList.add(timeSeriesCollection);
             barSeriesList.add(barSeriesCollection);
-
-
-
+            
         }
+        // the options for the dropdown
         String[] analysisTypes = {
                 "Line Chart",
                 "Scatter Plot",
                 "Bar Chart",
                 "Time Series",
         };
+        // calling the Analysis class to compute the data into viewers
         strategyTwo = new Analysis(root,method,seriesName,analysisNames,analysisTypes,finalMessage.toString(),timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
     }
-
 }
 

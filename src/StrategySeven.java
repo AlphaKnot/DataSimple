@@ -3,6 +3,7 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.Year;
 import java.util.ArrayList;
+import java.util.Vector;
 
 /***
  * This class processes the data required (from the parsed series) of strategy 7
@@ -11,12 +12,20 @@ import java.util.ArrayList;
  */
 public class StrategySeven {
 
+    // represents the dropdown menu
+    Vector<String> viewDropdownList;
     // represents the dropdown of analyses
     String[] analysisNames;
     // represents the name of datasets being processed
     String[] seriesName;
     // the program ui
     ProgramUI root;
+    // object of analysis representing strategy 7
+    Analysis strategySeven;
+    // boolean array that checks if the graph is already set
+    Boolean[] GraphAlreadySet;
+    // object of the viewer
+    Viewer myView;
 
     /***
      * the constructor for strategy 7
@@ -87,6 +96,7 @@ public class StrategySeven {
             timeSeriesList.add(timeSeriesCollection);
             barSeriesList.add(barSeriesCollection);
         }
+
         // the options for the dropdown
         String[] analysisTypes={
                 "Line Chart",
@@ -96,7 +106,6 @@ public class StrategySeven {
                 "Report"
         };
         // calling the Analysis class to compute the data into viewers
-        Analysis strategySeven = new Analysis(root,method,seriesName,analysisNames,analysisTypes,message.toString(),timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
-
+        strategySeven = new Analysis(root,method,seriesName,analysisNames,analysisTypes,message.toString(),timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
     }
 }

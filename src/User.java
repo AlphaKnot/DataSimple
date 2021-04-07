@@ -1,10 +1,10 @@
 /**
  * this class represents an object of User
+ * @auhor Jenessa Lu
  */
 public class User {
     public String CDusername;
     public String CDpassword;
-   // public boolean CDpermission;
 
     /***
      * the constructor
@@ -15,7 +15,6 @@ public class User {
     public User(String username, String password){
         CDusername = username;
         CDpassword = password;
-       // CDpermission = permission;
     }
 
     /***
