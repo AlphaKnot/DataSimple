@@ -1,6 +1,7 @@
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
+import javax.xml.crypto.Data;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
@@ -64,7 +65,11 @@ public class DataProcessor {
                 System.out.println("Mistake code -- 3312");
 
         }
-        }catch(Exception e){
+
+        }catch (DataProcessorException f){
+            JOptionPane.showMessageDialog(root, "Country has no usable data for the selected years. Please select another range of years.");
+        }
+        catch(Exception e){
             JOptionPane.showMessageDialog(root, "Country has no usable data, please select another country or another analysis");
         }
 

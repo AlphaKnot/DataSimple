@@ -1,60 +1,75 @@
-import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.Year;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-import javax.swing.*;
+
 import java.util.ArrayList;
 
-public class StrategyFive extends JFrame {
-    String[] analysisNames;
 
-    public StrategyFive(ProgramUI root, ArrayList<ParsedSeries> series, int method){
-        String[] seriesName = new String[]{"Average govt expenditure on education"};
+public class StrategyFive{
+    String[] analysisNames ;
+    String[] seriesName;
+    ProgramUI root;
+    String message;
+
+    public StrategyFive(ProgramUI root, ArrayList<ParsedSeries> series, int method) throws DataProcessorException {
+        seriesName = new String[]{
+                "Average of Government Expenditure on Education"
+        };
+        this.root = root;
+        StringBuilder stringBuilder = new StringBuilder();
         analysisNames = root.getAnalysisLabels();
-        ArrayList<TimeSeries> timeSeriesDatasets = new ArrayList<>();
-        ArrayList<DefaultCategoryDataset> barSeriesDataSets = new ArrayList<>();
-        ArrayList<XYSeries> XYSeriesSets = new ArrayList<>();
-        ArrayList<TimeSeries>scatterSeriesDatasets = new ArrayList<>();
+
+        ArrayList<TimeSeriesCollection> timeSeriesList = new ArrayList<>();
+        ArrayList<TimeSeriesCollection> scatterSeriesList = new ArrayList<>();
+        ArrayList<TimeSeriesCollection> xySeriesList = new ArrayList<>();
+        ArrayList<TimeSeriesCollection> barSeriesList = new ArrayList<>();
+
+
+        if (series.size() == 0){
+            throw new DataProcessorException("This country has no valid data for the selected years");
+        }
+
         for (int i = 0; i < series.size(); i++) {
-            XYSeries xyseries = new XYSeries(seriesName[i]);
+
+            TimeSeriesCollection timeSeriesCollection = new TimeSeriesCollection();
+            TimeSeriesCollection scatterSeriesCollection = new TimeSeriesCollection();
+            TimeSeriesCollection xySeriesCollection = new TimeSeriesCollection();
+            TimeSeriesCollection barSeriesCollection = new TimeSeriesCollection();
+
+            TimeSeries xyseries = new TimeSeries(seriesName[i]);
             TimeSeries scatterseries = new TimeSeries(seriesName[i]);
             TimeSeries timeseries = new TimeSeries(seriesName[i]);
-            DefaultCategoryDataset barseries = new DefaultCategoryDataset();
+            TimeSeries barseries = new TimeSeries(seriesName[i]);
+
+
             for (int j = 0; j < series.get(i).getValues().size(); j++) {
-                xyseries.add(series.get(i).xDelimitation.get(j),series.get(i).getValues().get(j));
+                xyseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                 scatterseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
-                barseries.setValue(series.get(i).getValues().get(j),seriesName[i], series.get(i).xDelimitation.get(j));
+                barseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                 timeseries.add(new Year(series.get(i).xDelimitation.get(j)), series.get(i).getValues().get(j));
+                message = seriesName[i] +" had a value in year " + series.get(i).xDelimitation.get(j) + " of "+ series.get(i).getValues().get(j)+"\n";
+                stringBuilder.append(message);
             }
-            XYSeriesSets.add(xyseries);
-            timeSeriesDatasets.add(scatterseries);
-            barSeriesDataSets.add(barseries);
-            scatterSeriesDatasets.add(scatterseries);
+
+            xySeriesCollection.addSeries(xyseries);
+            scatterSeriesCollection.addSeries(scatterseries);
+            timeSeriesCollection.addSeries(timeseries);
+            barSeriesCollection.addSeries(barseries);
+
+            xySeriesList.add(xySeriesCollection);
+            scatterSeriesList.add(scatterSeriesCollection);
+            timeSeriesList.add(timeSeriesCollection);
+            barSeriesList.add(barSeriesCollection);
+
+
 
         }
-        XYSeriesCollection XYSeriesDataset = new XYSeriesCollection();
-        XYSeriesDataset.addSeries(XYSeriesSets.get(0));
 
+        Analysis strategyFive = new Analysis(analysisNames,root,timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
 
-
-
-        TimeSeriesCollection scatterDataSet = new TimeSeriesCollection();
-        scatterDataSet.addSeries(scatterSeriesDatasets.get(0));
-
-
-        TimeSeriesCollection timeSeriesDataset = new TimeSeriesCollection();
-        timeSeriesDataset.addSeries(timeSeriesDatasets.get(0));
-
-        //CategoryDataset barSeriesDataset = new DefaultCategoryDataset();
-
-
-        Analysis strategyFive = new Analysis(analysisNames,root,timeSeriesDatasets,scatterSeriesDatasets,barSeriesDataSets,XYSeriesSets);
-        strategyFive.CreateLineChart(root,method,XYSeriesDataset);
-        strategyFive.createScatter(root,method,scatterDataSet);
-        strategyFive.createBar(root,method,barSeriesDataSets);
-        //strategyFive.createTimeSeries(root,method,timeSeriesDataset);
+        strategyFive.createScatter(method,seriesName);
+        strategyFive.createBar(method,seriesName);
+        strategyFive.createTimeSeries(method,seriesName);
+        strategyFive.createReport(stringBuilder.toString());
     }
 }
