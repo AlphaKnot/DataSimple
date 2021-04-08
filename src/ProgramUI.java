@@ -1,3 +1,4 @@
+// importing the required libraries for this class
 import javax.swing.*;
 import javax.swing.text.View;
 import java.awt.*;
@@ -6,20 +7,19 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.util.Objects;
-
 import org.jfree.chart.*;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-
+/***
+* this class represents the program interface
+* @author Amaar Hussein
+*/
 public class ProgramUI extends JFrame{
 
     public boolean minusButtonClicked=false;
     public Boolean plusButtonClicked=false;
-    /**
-     * Initalize UI components with class attributes to be manipulated later.
-     *
-     * TO-DO: Change attribute name for the combo-boxes to be more descript.
-     */
+    
+    // initializing all the panels, dropdowns and buttons
     private JComboBox countryDropdown;
     private JComboBox yearStartDropdown;
     private JComboBox yearEndDropDown;
@@ -33,6 +33,8 @@ public class ProgramUI extends JFrame{
     private JPanel north;
     private JPanel south;
     private CountryDatabase countDB = null;
+    
+    // the array of indicators and analysis labels
     private String[][] indicators;
     private String[] AnalysisLabels;
 
@@ -47,7 +49,6 @@ public class ProgramUI extends JFrame{
      *  add_view
      *  remove_view
      */
-
     public ProgramUI() throws FileNotFoundException {
         indicators = new String[][]{
                     {"EN.ATM.CO2E.PC", "EG.USE.PCAP.KG.OE", "EN.ATM.PM25.MC.M3"},
@@ -60,20 +61,21 @@ public class ProgramUI extends JFrame{
                     {"SE.XPD.TOTL.GD.ZS", "SH.XPD.CHEX.GD.ZS"},
 
             };
+        // getting the analysis labels
         AnalysisLabels = new String[analysisDropDown.getItemCount()];
         for(int i = 0; i<AnalysisLabels.length;i++){
             AnalysisLabels[i] = analysisDropDown.getItemAt(i).toString();
         }
 
-        // Same numbers, different implementation.
 
+        // the program layout 
         center.setLayout(new FlowLayout());
         setSize(1400,1000);
         setTitle("DatSimp -- Alpha Knot inc");
         add(rootPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // Set length for analysis dropdown
-        //analysisDropDown.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        
+        // getting the country database 
         countDB = new CountryDatabase("country_list");
         //setting sizes for comboboxes
         add_view.addActionListener(new ActionListener() {
@@ -82,30 +84,49 @@ public class ProgramUI extends JFrame{
                 JOptionPane.showMessageDialog(rootPanel,"Please Analyze a country before adding a viewer!");
             }
         });
+        // adding action listeners
         countryDropdown.addActionListener(new countryDropdownClicked(this, countryDropdown, yearStartDropdown, yearEndDropDown,countDB));
         recalculate_button.addActionListener(new recalculateButtonClicked(this,countryDropdown,yearStartDropdown,yearEndDropDown,analysisDropDown,countDB,viewDropdown));
         remove_view.addActionListener(new removeViewOnClick(this));
-        // TODO : Add graphs , add hover listener event to them
+    
 
     }
 
+    /***
+    * the getter method for the center panel
+    * @return center the center panel
+    */
     public JPanel getCenter() {
         return center;
     }
+
+    /***
+    * the method that refreshes the center panel when another selection is picked
+    */
     public void refreshCenter(){
          center.removeAll();
          center.setLayout(new FlowLayout());
     }
-
+    
+    /***
+    * the getter method for the analysis labels
+    * @return AnalysisLabels the analysis labels 
+    */
     public String[] getAnalysisLabels() {
         return AnalysisLabels;
     }
-
+    
+    /***
+    * the getter method for indicators
+    * @return indicators the World Bank Indicators
+    */
     public String[][] getIndicators() {
         return indicators;
     }
 
-    // We will need multiple actionListeners for each task, I'll try renaming each class to be indicative of what needs to be done ~ marz
+    /***
+    * the event listener if the country dropdown was clicked
+    */
     static class countryDropdownClicked implements ActionListener{
         JComboBox countryDropdown;
         JComboBox yearStartDropdown;
@@ -119,13 +140,16 @@ public class ProgramUI extends JFrame{
             this.cd = cd;
             this.main = main;
         }
+        
+        /***
+        * overrides the action performed method and refreshes the list
+        */
         @Override
         public void actionPerformed(ActionEvent e) {
             // Executes only the first time the action is performed
             if (this.countryDropdown.getItemCount() == 1) {
-                // This call to method will refresh years, possibly use jenessa's code? ~ marz
+                // This call to method will refresh years
                 System.out.println("Refreshing country lists");
-
 
                     // iterates through all countries and adds them to drop down menu, refreshes dates and
                     for (int i = 0; i < Objects.requireNonNull(cd).Countrydatabase.size(); i++) {
@@ -146,22 +170,17 @@ public class ProgramUI extends JFrame{
                 // Remove all previous years
                 yearEndDropdown.removeAllItems();
                 yearStartDropdown.removeAllItems();
-                // Does this item have country properties
+               
                 // Use this to get country Object
                 Country selected = cd.getCountrydatabase().get(countryDropdown.getSelectedIndex());
-                /*
-                 System.out.println("Start year of selected country: "+ selected.years.getStart());
-                 System.out.println("End year of selected country: "+selected.years.getEnd());
-                For diagnostics
-                 */
+              
 
                 for(int i = selected.years.getStart() ; i<selected.years.getEnd(); i++){
                     yearEndDropdown.addItem((Integer) i);
                     yearStartDropdown.addItem((Integer) i);
                 }
-                /*
-                 * Small thing here where you get the last year and update the EndYear button to have the last year
-                 */
+                // Small thing here where you get the last year and update the EndYear button to have the last year
+                
                 yearEndDropdown.setSelectedIndex(selected.years.getEnd()-selected.years.getStart()-1);
             }
         }
