@@ -182,8 +182,12 @@ class removeJScrollPane implements MouseListener {
             }
             else {
                 chartPanel.removeAll();
+                chartPanel.repaint();
+                chartPanel.setVisible(false);
                 pane.getViewport().removeAll();
                 pane.removeAll();
+                pane.repaint();
+                pane.setVisible(false);
                 graphAlreadySet[index] = false;
                 root.minusButtonClicked = false;
                 System.out.println("Removed graph");
