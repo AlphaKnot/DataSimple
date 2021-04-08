@@ -112,6 +112,7 @@ public class StrategyTwo {
                 "Scatter Plot",
                 "Bar Chart",
                 "Time Series",
+                "Report"
         };
         // calling the Analysis class to compute the data into viewers
         strategyTwo = new Analysis(root,method,seriesName,analysisNames,analysisTypes,finalMessage.toString(),timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
