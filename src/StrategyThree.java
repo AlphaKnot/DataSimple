@@ -19,9 +19,10 @@ public class StrategyThree {
     ArrayList<TimeSeriesCollection> scatterSeriesList;
     ArrayList<TimeSeriesCollection> barSeriesList;
     ArrayList<TimeSeriesCollection> xySeriesList;
+    float cum = (float)0.0;
 
     // constructor is only thing needed
-    public StrategyThree(ProgramUI root, ArrayList<ParsedSeries> series, int method) {
+    public StrategyThree(ProgramUI root, ArrayList<ParsedSeries> series, int method) throws DataProcessorException{
 
         // graph labels
         seriesName = new String[]{"CO2 Emissions (Per Capita)","GDP (Per Capita)","Ratio of CO2 to GDP"};
@@ -69,6 +70,7 @@ public class StrategyThree {
                     }
                 }
             } else {
+                cum += series.get(i).cumulativeAverage;
                 for (int j = 0; j < series.get(i).getValues().size(); j++) {
                     xyseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                     scatterseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
@@ -85,6 +87,9 @@ public class StrategyThree {
             scatterSeriesList.add(scatterSeriesCollection);
             timeSeriesList.add(timeSeriesCollection);
             barSeriesList.add(barSeriesCollection);
+        }
+        if (cum == 0){
+            throw new DataProcessorException("No data for selected year range");
         }
         // axis names
         String[] axis={

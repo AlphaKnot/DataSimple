@@ -26,6 +26,7 @@ public class StrategyOne{
     Boolean[] GraphAlreadySet;
     // object of the viewer
     Viewer myView;
+    boolean isEmpty = true;
 
     /***
      * the constructor for strategy 1
@@ -33,7 +34,7 @@ public class StrategyOne{
      * @param series the dataset parsed from ParsedSeries to be used for data processing
      * @param method the index of the analysis on the dropdown menu
      */
-    public StrategyOne(ProgramUI root, ArrayList<ParsedSeries> series, int method){
+    public StrategyOne(ProgramUI root, ArrayList<ParsedSeries> series, int method) throws DataProcessorException{
         seriesName = new String[]{
                 "CO2 emissions (metric tons per capita) ",
                 "Energy use (kg of oil equivalent per capita) ",
@@ -73,6 +74,12 @@ public class StrategyOne{
 
 
             for (int j = 0; j < series.get(i).getValues().size(); j++) {
+
+                //Check if the selected year range has data or not
+                if (series.get(i).getValues().get(j) != null){
+                    isEmpty = false;
+                }
+
                 xyseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                 scatterseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                 barseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
@@ -82,6 +89,11 @@ public class StrategyOne{
                 message = seriesName[i] +" had a value in year " + series.get(i).xDelimitation.get(j) + " of "+ series.get(i).getValues().get(j)+"\n";
                 finalMessage.append(message);
             }
+            if (isEmpty){
+                //Throw an exception if no data for the selected years
+                throw new DataProcessorException("No Data For The Selected Years");
+            }
+
             // adding the series to their collections
             xySeriesCollection.addSeries(xyseries);
             scatterSeriesCollection.addSeries(scatterseries);
