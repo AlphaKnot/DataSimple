@@ -4,6 +4,8 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.Year;
 import org.jfree.data.xy.XYSeries;
+
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -40,7 +42,7 @@ public class StrategyTwo {
      * @param series the dataset parsed from ParsedSeries to be used for data processing
      * @param method the index of the analysis on the dropdown menu
      */
-    public StrategyTwo(ProgramUI root, ArrayList<ParsedSeries> series, int method){
+    public StrategyTwo(ProgramUI root, ArrayList<ParsedSeries> series, int method) throws DataProcessorException {
 
         // the names of the dataset series
         seriesName = new String[]{
@@ -52,6 +54,8 @@ public class StrategyTwo {
 
         // getting the analysis labels to the program ui
         analysisNames = root.getAnalysisLabels();
+
+        boolean isEmpty = true;
 
         // creating arraylists to store each dataset given the series' name
         ArrayList<TimeSeriesCollection> timeSeriesList = new ArrayList<>();
@@ -82,6 +86,11 @@ public class StrategyTwo {
 
 
             for (int j = 0; j < series.get(i).getValues().size(); j++) {
+
+                if (series.get(i).getValues().get(j) != null){
+                    isEmpty = false;
+                }
+
                 // adding the datasets to their series
                 xyseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                 scatterseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
@@ -91,6 +100,10 @@ public class StrategyTwo {
                 // creating the report message and adding it to the final report message
                 message = seriesName[i] +" had a value in year " + series.get(i).xDelimitation.get(j) + " of "+ series.get(i).getValues().get(j)+"\n";
                 finalMessage.append(message);
+            }
+            if (isEmpty){
+                //Throw an exception if no data for the selected years
+                throw new DataProcessorException("No Data For The Selected Years");
             }
 
             // adding the series to their collections

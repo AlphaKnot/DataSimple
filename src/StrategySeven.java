@@ -27,13 +27,14 @@ public class StrategySeven {
     // object of the viewer
     Viewer myView;
 
+
     /***
      * the constructor for strategy 7
      * @param root the program ui
      * @param series the dataset parsed from ParsedSeries to be used for data processing
      * @param method the index of the analysis on the dropdown menu
      */
-    public StrategySeven(ProgramUI root, ArrayList<ParsedSeries> series, int method){
+    public StrategySeven(ProgramUI root, ArrayList<ParsedSeries> series, int method) throws DataProcessorException{
 
         // the names of the dataset series
         seriesName = new String[] {
@@ -44,6 +45,8 @@ public class StrategySeven {
         this.root = root;
         // getting the analysis labels to the program ui
         analysisNames = root.getAnalysisLabels();
+
+        boolean isEmpty = true;
 
         // creating arraylists to store each dataset given the series' name
         ArrayList<TimeSeriesCollection> timeSeriesList = new ArrayList<>();
@@ -73,6 +76,10 @@ public class StrategySeven {
             TimeSeries barseries = new TimeSeries(seriesName[i]);
 
             for (int j = 0; j < series.get(i).getValues().size()-1; j++) {
+
+                if (series.get(i).getValues().get(j) != null){
+                    isEmpty = false;
+                }
                 // adding the datasets to their series
                 xyseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                 scatterseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
@@ -84,6 +91,11 @@ public class StrategySeven {
                 finalMessage.append(message);
 
             }
+            if (isEmpty){
+                //Throw an exception if no data for the selected years
+                throw new DataProcessorException("No Data For The Selected Years");
+            }
+
             // adding the series to their collections
             xySeriesCollection.addSeries(xyseries);
             scatterSeriesCollection.addSeries(scatterseries);

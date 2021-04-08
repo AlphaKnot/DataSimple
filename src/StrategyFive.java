@@ -43,6 +43,7 @@ public class StrategyFive{
         StringBuilder finalMessage = new StringBuilder();
         finalMessage.append(title+"==========================================\n");
 
+        boolean isEmpty = true;
         
         if (series.size() == 0){
             throw new DataProcessorException("This country has no valid data for the selected years");
@@ -64,6 +65,10 @@ public class StrategyFive{
 
 
             for (int j = 0; j < series.get(i).getValues().size(); j++) {
+                if (series.get(i).getValues().get(j) != null){
+                    isEmpty = false;
+                }
+
                 // adding the datasets to their series
                 xyseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                 scatterseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
@@ -73,6 +78,10 @@ public class StrategyFive{
                 // creating the report message and adding it to the final report message
                 message = seriesName[i] +" had a value in year " + series.get(i).xDelimitation.get(j) + " of "+ series.get(i).getValues().get(j)+"\n";
                 finalMessage.append(message);
+            }
+            if (isEmpty){
+                //Throw an exception if no data for the selected years
+                throw new DataProcessorException("No Data For The Selected Years");
             }
 
             // adding the series to their collections

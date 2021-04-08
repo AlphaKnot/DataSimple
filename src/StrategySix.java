@@ -13,13 +13,14 @@ import java.util.ArrayList;
 public class StrategySix {
     String[] analysisNames;
     String[] seriesName;
+    boolean isEmpty;
     ProgramUI root;
     ArrayList<TimeSeriesCollection> timeSeriesList;
     ArrayList<TimeSeriesCollection> scatterSeriesList;
     ArrayList<TimeSeriesCollection> barSeriesList;
     ArrayList<TimeSeriesCollection> xySeriesList;
     // Constructor is only thing needed
-    public StrategySix(ProgramUI root, ArrayList<ParsedSeries> series, int method) {
+    public StrategySix(ProgramUI root, ArrayList<ParsedSeries> series, int method) throws DataProcessorException{
         // graph labels
         seriesName = new String[]{"Hospital Beds","Current Health Care Expenditure","Ratio of Hospital beds to CHE"};
 
@@ -66,12 +67,19 @@ public class StrategySix {
                 }
             } else {
                 for (int j = 0; j < series.get(i).getValues().size(); j++) {
+                    if (series.get(i).getValues().get(j) != null){
+                        isEmpty = false;
+                    }
                     xyseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                     scatterseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                     barseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                     timeseries.add(new Year(series.get(i).xDelimitation.get(j)), series.get(i).getValues().get(j));
 
                 }
+            }
+            if (isEmpty){
+                //Throw an exception if no data for the selected years
+                throw new DataProcessorException("No Data For The Selected Years");
             }
             xySeriesCollection.addSeries(xyseries);
             scatterSeriesCollection.addSeries(scatterseries);
