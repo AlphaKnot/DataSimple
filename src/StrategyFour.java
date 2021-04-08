@@ -103,7 +103,7 @@ public class StrategyFour{
         };
 
         // calling the Analysis class to compute the data into viewers
-        Analysis strategyFour = new Analysis(root,method,seriesName,analysisNames,analysisTypes,message.toString(),timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
+        Analysis strategyFour = new Analysis(root,method,seriesName,analysisNames,analysisTypes,stringBuilder.toString(),timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
 
     }
 }
