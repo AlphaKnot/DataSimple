@@ -41,7 +41,7 @@ public class Analysis extends JFrame {
         this.barSeriesCollection = barSeriesCollection;
         this.xySeriesCollection = xySeriesCollection;
 
-        myView = myView = new Viewer(root, this, analysisNames, method, "", seriesName, viewerTypes);
+        myView = myView = new Viewer(root, this, analysisNames, method, finalMessage, seriesName, viewerTypes);
 
     }
 
