@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class StrategySix {
     String[] analysisNames;
     String[] seriesName;
-    boolean isEmpty;
+    float cum = (float)0.0;
     ProgramUI root;
     ArrayList<TimeSeriesCollection> timeSeriesList;
     ArrayList<TimeSeriesCollection> scatterSeriesList;
@@ -67,9 +67,7 @@ public class StrategySix {
                 }
             } else {
                 for (int j = 0; j < series.get(i).getValues().size(); j++) {
-                    if (series.get(i).getValues().get(j) != null){
-                        isEmpty = false;
-                    }
+                    cum += series.get(i).cumulativeAverage;
                     xyseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                     scatterseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
                     barseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
@@ -77,7 +75,7 @@ public class StrategySix {
 
                 }
             }
-            if (isEmpty){
+            if (cum == 0){
                 //Throw an exception if no data for the selected years
                 throw new DataProcessorException("No Data For The Selected Years");
             }
