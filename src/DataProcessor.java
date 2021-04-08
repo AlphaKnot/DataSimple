@@ -41,16 +41,37 @@ public class DataProcessor {
         // tries to call the different strategies depending on the index of the strategy
         try {
             switch (method) {
-                case 0 -> st1 = new StrategyOne(root, series, method);
-                case 1 -> strategyTwo = new StrategyTwo(root, series, method);
-                case 2 -> strategyThree = new StrategyThree(root, series, method);
-                case 3 -> strategyFour = new StrategyFour(root, series, method);
-                case 4 -> strategyFive = new StrategyFive(root, series, method);
-                case 5 -> strategySix = new StrategySix(root, series, method);
-                case 6 -> strategySeven = new StrategySeven(root, series, method);
-                case 7 -> strategyEight = new StrategyEight(root, series, method);
-                default -> JOptionPane.showMessageDialog(root, "Analysis method not valid, please select another");
+                case 0:
+                    st1 = new StrategyOne(root, series, method);
+                    break;
+                case 1:
+                    strategyTwo = new StrategyTwo(root, series, method);
+                    break;
+                case 2:
+                    strategyThree = new StrategyThree(root, series, method);
+                    break;
+                case 3:
+                    strategyFour = new StrategyFour(root, series, method);
+                    break;
+                case 4:
+                    strategyFive = new StrategyFive(root, series, method);
+                    break;
+                case 5:
+                    strategySix = new StrategySix(root, series, method);
+                    break;
+                case 6:
+                    strategySeven = new StrategySeven(root, series, method);
+                    break;
+                case 7:
+                    strategyEight = new StrategyEight(root, series, method);
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(root, "Analysis method not valid, please select another");
+                    break;
             }
+        }
+        catch (DataProcessorException f){
+            JOptionPane.showMessageDialog(root, "Country has no usable data for the selected year range.");
         }
         // if the country has no usable data
         catch(Exception e){

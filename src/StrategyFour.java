@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * @author Ishaan Kumar
  */
 
- 
+
 
 
 public class StrategyFour{
@@ -18,13 +18,14 @@ public class StrategyFour{
     String[] seriesName;
     ProgramUI root;
     String message;
+    boolean isEmpty = true;
     /***
-     * the constructor for strategy 5
+     * the constructor for strategy 4
      * @param root the program ui
      * @param series the dataset parsed from ParsedSeries to be used for data processing
      * @param method the index of the analysis on the dropdown menu
      */
-    public StrategyFour(ProgramUI root, ArrayList<ParsedSeries> series, int method) {
+    public StrategyFour(ProgramUI root, ArrayList<ParsedSeries> series, int method) throws DataProcessorException {
 
         //the names of the dataset series
         seriesName = new String[]{
@@ -32,7 +33,7 @@ public class StrategyFour{
         };
         //calling the programui
         this.root = root;
-        
+
         // getting the analysis labels to the program ui
         analysisNames = root.getAnalysisLabels();
 
@@ -56,7 +57,7 @@ public class StrategyFour{
             TimeSeriesCollection scatterSeriesCollection = new TimeSeriesCollection();
             TimeSeriesCollection xySeriesCollection = new TimeSeriesCollection();
             TimeSeriesCollection barSeriesCollection = new TimeSeriesCollection();
-            
+
             // initializing the series with their appropriate names
             TimeSeries xyseries = new TimeSeries(seriesName[i]);
             TimeSeries scatterseries = new TimeSeries(seriesName[i]);
@@ -65,6 +66,10 @@ public class StrategyFour{
 
 
             for (int j = 0; j < series.get(i).getValues().size(); j++) {
+                //Check if the selected year range has data or not
+                if (series.get(i).getValues().get(j) != null){
+                    isEmpty = false;
+                }
 
                 // adding the datasets to their series
                 xyseries.add(new Year(series.get(i).xDelimitation.get(j)),series.get(i).getValues().get(j));
@@ -77,6 +82,10 @@ public class StrategyFour{
                 stringBuilder.append(message);
             }
 
+            if (isEmpty){
+                //Throw an exception if no data for the selected years
+                throw new DataProcessorException("No Data For The Selected Years");
+            }
             // adding the series to their collections
             xySeriesCollection.addSeries(xyseries);
             scatterSeriesCollection.addSeries(scatterseries);
@@ -95,11 +104,11 @@ public class StrategyFour{
 
         // the options for the dropdown
         String[] analysisTypes = {
-            "Line Chart",
-            "Scatter Plot",
-            "Bar Chart",
-            "Time Series",
-            "Report"
+                "Line Chart",
+                "Scatter Plot",
+                "Bar Chart",
+                "Time Series",
+                "Report"
         };
 
         // calling the Analysis class to compute the data into viewers
