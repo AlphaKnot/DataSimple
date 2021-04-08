@@ -10,6 +10,8 @@ import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.data.time.TimeSeriesCollection;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 /**
@@ -169,7 +171,7 @@ public class Analysis extends JFrame {
         outputScrollPane.setPreferredSize(new Dimension(600, 400));
         outputScrollPane.setBackground(Color.white);
         outputScrollPane.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-
+        report.addMouseListener(new removeJScrollPane(root,report, outputScrollPane, myView.viewDropdownList, root.viewDropdown.getSelectedIndex(), myView.GraphAlreadySet));
         root.getCenter().add(outputScrollPane);
         root.validate();
 

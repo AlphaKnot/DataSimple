@@ -5,8 +5,7 @@ import org.jfree.chart.JFreeChart;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.Vector;
 
 /**
@@ -153,6 +152,66 @@ class removeGraphClicked implements ChartMouseListener {
     */
     @Override
     public void chartMouseMoved(ChartMouseEvent chartMouseEvent) {
+
+    }
+}
+
+class removeJScrollPane implements MouseListener {
+    int index; // Index for removal of chart to set to false
+    Vector<String> viewDropdownList;
+    ProgramUI root;
+    JTextArea chartPanel;
+    JScrollPane pane;
+    Boolean[] graphAlreadySet;
+    public removeJScrollPane(ProgramUI root, JTextArea chartPanel, JScrollPane outputScrollPane, Vector<String> viewDropdownList, int index, Boolean[] graphAlreadySet) {
+        this.root = root;
+        this.viewDropdownList = viewDropdownList;
+        this.chartPanel = chartPanel;
+        this.index = index;
+        this.pane = outputScrollPane;
+        this.graphAlreadySet=graphAlreadySet;
+    }
+
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        System.out.println("Chart clicked");
+        if (root.minusButtonClicked) {
+            if(viewDropdownList.size()==0){
+                JOptionPane.showMessageDialog(root,"No charts clicked");
+            }
+            else {
+                chartPanel.removeAll();
+                pane.getViewport().removeAll();
+                pane.removeAll();
+                graphAlreadySet[index] = false;
+                root.minusButtonClicked = false;
+                System.out.println("Removed graph");
+                root.getCenter().remove(chartPanel);
+                root.validate();
+                root.pack();
+            }
+        } else
+            System.out.println("+ not clicked yet");
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
 
     }
 }
