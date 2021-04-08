@@ -106,6 +106,6 @@ public class StrategySeven {
                 "Report"
         };
         // calling the Analysis class to compute the data into viewers
-        strategySeven = new Analysis(root,method,seriesName,analysisNames,analysisTypes,message.toString(),timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
+        strategySeven = new Analysis(root,method,seriesName,analysisNames,analysisTypes,finalMessage.toString(),timeSeriesList,scatterSeriesList,barSeriesList,xySeriesList);
     }
 }
