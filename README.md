@@ -1,6 +1,6 @@
-# DatSimp
+# DataSimple
 
-DatSimp is an advanced data representation software developed by Alpha Knot Industries. 
+DataSimple is an advanced data representation software developed for UWO's cs 2212 course. 
 
 # What does this program do?
 
@@ -33,5 +33,3 @@ First select the minus (-) button near the viewer dropdown, and then click a gra
 
 To get results from another country, select a country, year and analysis type and click recalculate. 
 To see another analysis from the same country, select another analysis type and click recalculate and add your preferred viewers. 
-
-ALPHA KNOT INDUSTRIES INC.
